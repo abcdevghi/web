@@ -60,7 +60,6 @@ p {
 
 img {
   vertical-align: text-bottom;
-  filter: saturate(7);
   transition: transform var(--fast) var(--ease-back), background-color var(--fast), box-shadow var(--fast);
 }
 
