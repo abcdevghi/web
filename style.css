@@ -270,6 +270,11 @@ img:active,
   transition: transform var(--fast) var(--ease-back), background-color var(--fast), box-shadow var(--fast);
 }
 
+.link {
+  color: var(--sapphire);
+  transition: transform var(--fast) var(--ease-back), background-color var(--fast), box-shadow var(--fast);
+}
+
 /* Mobile responsive */
 @media only screen and (max-width: 780px) {
   html {
@@ -317,6 +322,7 @@ br {
 .button,
 .card,
 img,
+.link,
 .version {
   /* default state → smooth, longer entry when hover/active triggers */
   transition: transform var(--bounce-speed) var(--ease-bounce-exit),
@@ -329,10 +335,12 @@ img,
 .card:hover,
 img:hover,
 .version:hover,
+.link:hover,
 .button:active,
 .card:active,
 img:active,
-.version:active {
+.version:active,
+.link:active {
   /* hovered/active state → quick exit back to normal */
   transition: transform var(--fast) var(--ease-back),
               background-color var(--fast) var(--ease-back),
