@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script defer>
+
+let isActive = true;
+let intervalId;
+let clickCount = 0;
+let lastClickTime = 0;
+let isThrottled = false;
+let allowed = true;
+let totalThrottle = 0;
+let dethrottledClickCount = 0;
+
+function updateClickButton() {
+  const clickButton = document.getElementById('clickButton');
+  if (clickButton) {
+    clickButton.innerHTML = clickCount;
+  }
+}
+
+let throttledClickCount = 0;
+
+async function fetchWithFallback(path, options = {}) {
+  const primary = `https://trueuser.is-a.dev${path}`;
+  const fallback = `http://dono-01.danbot.host:9550${path}`;
+
+  try {
+    const res = await fetch(primary, options);
+    if (!res.ok) throw new Error("Primary returned non-2xx");
+    return res;
+  } catch (err) {
+    console.warn("Primary failed, using fallback:", err.message);
+    return await fetch(fallback, options);
+  }
+}
+    
+function updateThrottleCount() {
+  const throttleElement = $('#throttle');
+  const throttleElement2 = $('#throttle2');
+  dethrottledClickCount = totalThrottle - throttledClickCount;
+  throttleElement.text("Pending: " + totalThrottle + "/10");
+  throttleElement2.text("Sent: " + dethrottledClickCount + "/" + totalThrottle);
+  if (throttledClickCount > 0) {
+    throttleElement2.slideDown();
+    throttleElement.slideDown();
+  } else {
+    throttleElement.slideUp();
+    throttleElement2.slideUp();
+  }
+}
+
+async function sendThrottledClicks() {
+  try {
+    isThrottled = true;
+    while (throttledClickCount > 0) {
+      const response = await fetchWithFallback('/click', { method: 'POST' });
+      const data = await response.json();
+      console.log(data);
+
+      throttledClickCount--;
+      clickCount++;
+      updateClickButton();
+      updateThrottleCount();
+    }
+  } catch (error) {
+    console.error(error);
+  } finally {
+    isThrottled = false;
+    allowed = true;
+    totalThrottle = 0;
+    const clickButton = document.getElementById('clickButton');
+    if (clickButton) {
+      clickButton.style = "font-family: Varela";
+    }
+  }
+}
+
+async function send() {
+  const clickButton = document.getElementById('clickButton');
+  if (clickButton) {
+    clickButton.style = "font-family: Varela; color: white";
+  }
+
+  if (isThrottled) {
+    if (totalThrottle < 9 && allowed) {
+      throttledClickCount++;
+      totalThrottle++;
+    } else {
+      if (totalThrottle < 11 && allowed) {
+        throttledClickCount++;
+        totalThrottle++;
+        allowed = false;
+      }
+    }
+    updateThrottleCount();
+    return;
+  }
+
+  clickCount++;
+  updateClickButton();
+  lastClickTime = Date.now();
+
+  clearTimeout(intervalId);
+  intervalId = setTimeout(fetchAndUpdateClickButton, 3000);
+
+  if (isThrottled) {
+    return;
+  }
+
+  try {
+    isThrottled = true;
+    const response = await fetchWithFallback('/click', { method: 'POST' });
+    const data = await response.json();
+    console.log(data);
+
+    if (throttledClickCount > 0) {
+      await sendThrottledClicks();
+    }
+  } catch (error) {
+    console.error(error);
+  } finally {
+    isThrottled = false;
+    allowed = true;
+    totalThrottle = 0;
+  }
+}
+
+async function fetchAndUpdateClickButton() {
+  try {
+    const response = await fetchWithFallback('/click');
+    const contentType = response.headers.get('content-type') || '';
+    if (!response.ok || !contentType.includes('application/json')) {
+      throw new Error('Response was not valid JSON');
+    }
+
+    const data = await response.json();
+    clickCount = data.num;
+    updateClickButton();
+  } catch (error) {
+    console.error("Error updating button:", error);
+  }
+}
+
+function handleVisibilityChange() {
+  if (document.hidden) {
+    clearInterval(intervalId);
+    isActive = false;
+  } else {
+    isActive = true;
+    fetchAndUpdateClickButton();
+    const timeSinceLastClick = Date.now() - lastClickTime;
+    const delay = Math.max(0, 3000 - timeSinceLastClick);
+    clearTimeout(intervalId);
+    intervalId = setTimeout(fetchAndUpdateClickButton, delay);
+  }
+}
+
+document.addEventListener('visibilitychange', handleVisibilityChange);
+
+document.addEventListener('DOMContentLoaded', function() {
+  fetchAndUpdateClickButton();
+
+  (function animate() {
+    if (isActive) {
+      const timeSinceLastClick = Date.now() - lastClickTime;
+      const delay = Math.max(0, 3000 - timeSinceLastClick);
+
+      if (delay === 0) {
+        fetchAndUpdateClickButton();
+        if (!isThrottled) {
+          lastClickTime = Date.now();
+        }
+      }
+    }
+
+    requestAnimationFrame(animate);
+  })();
+});
+
+
+// Clean up resources when the page is unloaded or closed
+window.addEventListener('beforeunload', () => {
+  clearInterval(intervalId);
+});
+
+</script>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://trueuser.is-a.dev http://dono-01.danbot.host:9550;">
+<meta property="og:site_name" content="thisistrueuser">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Spammer" />
+<meta property="og:description" content="Electric Boogaloo: You click and everybody counts." />
+<meta property="og:url" content="https://trueuser.tk/" />
+<meta property="og:image" content="https://trueuser.tk/truef.png" />
+<meta name="theme-color" content="#2f3136">
+<link rel="icon" id="icon" href="/truef.png">
+<div>
+  <nav>
+    <a href="/" class="button">‹ Home</a>
+    <a class="active button">Spammer</a>
+  </nav>
+</div>
+
+<html>
+<link rel="stylesheet" href="/style.css">
+<style>
+    #throttle {
+      display: none;
+    }
+
+p {
+  font-size: 20px;
+  text-align: center;
+  margin: 0;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  color: white;
+  user-select: none;
+    z-index: 0
+}
+</style>
+<title>Spammer - thisistrueuser</title>
+<p>
+
+<script>
+    let man = document.cookie;
+if (man.includes("null_medal=true")) {document.getElementById("icon").href = "/trueg.png";}
+</script>
+
+<p2 style="font-family:Varela" id="demo"><button id="clickButton" onclick="send()" class="button" style="font-family: Varela">?</button></p2><p style="font-family:Varela; margin-top: 55px; font-size: 13px; z-index: -1" id="throttle"/><p style="font-family:Varela; margin-top: 75px; font-size: 13px; z-index: -1" id="throttle2"/>
+    

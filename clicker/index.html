@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:title" content="Clicker" />
+  <meta property="og:description" content="You click and it counts." />
+  <meta property="og:image" content="https://trueuser.is-a.dev/truef.png" />
+  <meta name="theme-color" content="#2f3136">
+  <link rel="icon" id="icon" href="/truef.png">
+  <link rel="stylesheet" href="/style.css">
+  <title>Clicker - thisistrueuser</title>
+  <style>
+    .button2 {
+      font-family: Varela;
+      background-color: transparent;
+      border: none;
+      color: #0072FF;
+      cursor: pointer;
+    }
+    .button2:active {
+      text-shadow: 0 0 10px rgba(0, 114, 255, 0.7);
+    }
+    #demo {
+      font-size: 20px;
+      text-align: center;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+    }
+      #click{
+            border: none;
+          padding: 24px 24px;
+      }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="button">‹ Home</a>
+    <a class="active button">Clicker</a>
+  </nav>
+
+  <div id="demo">
+    <button onclick="sus()" class="button" id="click">Button</button><br>
+    was not clicked<br>
+    <button onclick="eh()" class="button2">hack mode</button>
+  </div>
+
+  <script>
+    let Count = 0;
+
+    function sus() {
+      Count++;
+      const timesText = Count === 1 ? 'once' : `${Count} times`;
+      document.getElementById("demo").innerHTML = `
+        <button onclick="sus()" class="button" id="click">Button</button><br>
+        was clicked ${timesText}<br>
+        <button onclick="eh()" class="button2">hack mode</button>`;
+    }
+
+    function mathRandomInt(a, b) {
+      if (a > b) [a, b] = [b, a];
+      return Math.floor(Math.random() * (b - a + 1) + a);
+    }
+
+    function eh() {
+      document.getElementById("demo").innerHTML = `
+        you lost ${mathRandomInt(99999999999, 9999999999999999999999999)} brain cells falling for this<br>
+        <button onclick="Count = 0; non()" class="button2">reset</button>`;
+    }
+
+    function non() {
+      document.getElementById("demo").innerHTML = `
+        <button onclick="sus()" class="button" id="click">Button</button><br>
+        was not clicked<br>
+        <button onclick="eh()" class="button2">hack mode</button>`;
+    }
+
+    if (document.cookie.includes("null_medal=true")) {
+      document.getElementById("icon").href = "/trueg.png";
+    }
+  </script>
+</body>
+</html>

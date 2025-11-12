@@ -1,0 +1,57 @@
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:site_name" content="thisistrueuser">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Button" />
+<meta property="og:description" content="Clicker 2? Maybe." />
+<meta property="og:url" content="https://trueuser.is-a.dev/" />
+<meta property="og:image" content="https://trueuser.is-a.dev/truef.png" />
+<meta name="theme-color" content="#2f3136">
+<title>Button - thisistrueuser</title>
+<link rel="icon" id="icon" href="/truef.png">
+<link rel="stylesheet" href="/style.css">
+<style>
+#sus {padding: 30px 30px; z-index: 10; border: none; transition: transform var(--fast) var(--ease-back), background-color var(--fast), box-shadow var(--fast); transition: margin var(--slide-speed) var(--ease-back-slider);}
+</style>
+<div>
+  <nav>
+    <a href="/" class="button">‹ Home</a>
+    <a class="active button">Button</a>
+  </nav>
+</div>
+
+<script>
+console.log("i dont fucking know why, but it will only run in quirks mode. ignore the error.");
+
+let score = 0;
+
+function int(a, b) {
+  if (a > b) {
+    let c = a;
+    a = b;
+    b = c;
+  }
+  return Math.floor(Math.random() * (b - a + 1) + a);
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const sus = document.getElementById("sus");
+
+  if (sus) {
+    sus.addEventListener("click", function () {
+      const height = int(0, window.innerWidth - 400);
+      const width = int(0, window.innerHeight - 160);
+      sus.style.marginLeft = `${height}px`;
+      sus.style.marginTop = `${width}px`;
+      score += 1;
+      sus.textContent = String(score);
+    });
+  }
+});
+</script>
+
+<script>
+let man = document.cookie;
+if (man.includes("null_medal=true")) {document.getElementById("icon").href = "/trueg.png";}
+</script>
+<button id="sus" class="button"> 0</button>

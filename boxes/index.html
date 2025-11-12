@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Colorful Boxes</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .box-container {
+      display: flex;
+      flex-wrap: wrap;
+      width: 250px;
+    }
+
+    .box {
+      position: relative;
+      width: 50px;
+      height: 50px;
+      background-color: red;
+      margin: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      border-radius: 10px;
+      color: white;
+      font-weight: bold;
+    }
+
+    .box.green {
+      background-color: green;
+    }
+
+    .box.green.animate {
+      animation: colorChange 1s;
+    }
+
+    @keyframes colorChange {
+      from {
+        background-color: red;
+      }
+      to {
+        background-color: green;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="box-container" id="container">
+    <!-- Generate the 4x4 grid of boxes -->
+    <script>
+      // Function to create a new box
+      function createBox(index) {
+        const box = document.createElement('div');
+        box.classList.add('box');
+        box.addEventListener('click', toggleColor);
+        box.innerText = index + 1;
+        return box;
+      }
+
+      // Function to toggle the color of a box
+      function toggleColor() {
+        this.classList.toggle('green');
+        this.classList.toggle('animate');
+        updateCookie();
+      }
+
+      // Function to update the cookie with the current state
+      function updateCookie() {
+        const boxes = Array.from(document.querySelectorAll('.box'));
+        const colors = boxes.map(box => box.classList.contains('green') ? '1' : '0');
+        document.cookie = `boxColors=${colors.join('')}`;
+      }
+
+      // Function to load the saved state from the cookie
+      function loadStateFromCookie() {
+        const cookies = document.cookie.split(';');
+        const cookie = cookies.find(cookie => cookie.trim().startsWith('boxColors='));
+        if (cookie) {
+          const colors = cookie.split('=')[1];
+          const boxes = Array.from(document.querySelectorAll('.box'));
+          boxes.forEach((box, index) => {
+            box.classList.toggle('green', colors.charAt(index) === '1');
+          });
+        }
+      }
+
+      // Generate the grid of boxes
+      const container = document.getElementById('container');
+      for (let i = 0; i < 16; i++) {
+        container.appendChild(createBox(i));
+      }
+
+      // Load the saved state when the page loads
+      loadStateFromCookie();
+    </script>
+  </div>
+</body>
+</html>

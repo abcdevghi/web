@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>thisistrueuser</title>
+  <link rel="icon" href="/truef.png" id="icon" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main>
+    <section id="about">
+      <img src="truef.png" id="icon" onclick="playTomSound()" alt="trueuser avatar" height="100" width="100" />
+      <audio id="tom" src="/tom.mp3" preload="auto"></audio>
+      <header>
+        <h1>
+          thisistrueuser 
+          <a href="/updates" class="version">v3.0</a>
+        </h1>
+      </header>
+<div id="intro">
+  <h3 id="thisistrueuser">about me</h3>
+  hobbyist developer &amp; artist.<br>
+  i make games and websites for fun. i also draw and make music for fun. no i’m not good at any of these. but yes i’m good enough at these to beat a complete newbie.<br>
+  my favorite kind of 'free' is freedom.<br>
+  english major at <em>you-know-where</em>. like seriously you know me, <strong>don’t you</strong>?<br>
+  <em>trivia:</em> i’m trueuser, but trueuser isn’t <em>me</em>. trueuser is just a piece of my personality.
+</div>
+      <div id="socials">
+        <a href="https://youtube.com/thisistrueuser"><img src="/youtube.png" alt="YouTube" height="30" width="30" /></a>
+        <a href="https://twitter.com/trueuser_"><img src="/twitter.png" alt="Twitter" height="30" width="30" /></a>
+        <a href="https://roblox.com/groups/8911797/trueusers-room#!/"><img src="/roblox.png" alt="Roblox" height="30" width="30" /></a>
+        <a href="/discord"><img src="/disc.png" alt="Discord" height="30" width="30" /></a>
+      </div>
+          <h3>featured</h3>
+        <div id="socials">
+    <a href="/tank" class="card">
+      <div><h3>the tankening</h3><p>Web-based Artillery game using PixiJS. (wip)</p></div>
+    </a>
+        </div>
+    </section>
+
+<section id="projects">
+  <div id="project-nav">
+    <button id="expBtn" class="button active">Experiments</button>
+    <button id="gamesBtn" class="button">Games</button>
+  </div>
+ <div class="slide-container">
+  <div class="slider">
+  <div id="experiments" class="card-grid">
+    <a href="/clicker" class="card">
+      <div><h3>Clicker</h3><p>You click and game increments your score.</p></div>
+    </a>
+    <a href="/button" class="card">
+      <div><h3>Button</h3><p>Clicker, but the button moves.</p></div>
+    </a>
+    <a href="/login" class="card">
+      <div><h3>Dumb Login</h3><p>Log into random nonsense using random nonsense.</p></div>
+    </a>
+    <a href="/inf" class="card">
+      <div><h3>Infinity</h3><p>Infinite storage of rainbow words.</p></div>
+    </a>
+  </div>
+
+  <div id="games" class="card-grid">
+    <a href="/tank" class="card">
+      <div><h3>the tankening</h3><p>Web-based Artillery game using PixiJS. (wip)</p></div>
+    </a>
+    <a href="/discord" class="card">
+      <div><h3>BLEP<span class="highlight">Y</span></h3><p>Cave divers when uh... Join the Discord.</p></div>
+    </a>
+    <a href="https://tsq.itch.io/shooter" class="card">
+      <div><h3>The Ultimate Shooting Game</h3><p>Ever wanted to shoot angry red blobs?</p></div>
+    </a>
+    <a href="https://tsq.itch.io/simdotexe" class="card">
+      <div><h3>simulation.exe</h3><p>Short surreal adventure made in PowerPoint.</p></div>
+    </a>
+    <a href="https://tsq.itch.io/blepyjam" class="card">
+      <div><h3>Blepy's Adventure</h3><p>Puzzle-platformer with a friend! For GMC Jam 46.</p></div>
+    </a>
+  </div>
+    </div>
+    </div>
+</section>
+
+  </main>
+
+  <script>
+    const expBtn = document.getElementById("expBtn");
+    const gamesBtn = document.getElementById("gamesBtn");
+    const experiments = document.getElementById("experiments");
+    const games = document.getElementById("games");
+      
+expBtn.onclick = () => {
+  document.querySelector(".slider").style.transform = "translateX(0%)";
+  expBtn.classList.add("active");
+  gamesBtn.classList.remove("active");
+};
+
+gamesBtn.onclick = () => {
+  document.querySelector(".slider").style.transform = "translateX(-50%)";
+  gamesBtn.classList.add("active");
+  expBtn.classList.remove("active");
+};
+
+// Default view
+expBtn.click();
+      
+      let man = document.cookie;
+if (man == "null_medal=true") {document.getElementById("icon").href = "/trueg.png";}
+      
+let tomBuffer = null;
+
+async function playTomSound() {
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  const audioCtx = new AudioCtx();
+
+  if (audioCtx.state === 'suspended') await audioCtx.resume();
+
+  if (!tomBuffer) {
+    const res = await fetch('/tom.mp3');
+    const arrayBuf = await res.arrayBuffer();
+    tomBuffer = await audioCtx.decodeAudioData(arrayBuf);
+  }
+
+  const source = audioCtx.createBufferSource();
+  source.buffer = tomBuffer;
+  source.playbackRate.value = Math.random()/2 + 0.5;
+  source.connect(audioCtx.destination);
+  source.start(0);
+}
+  </script>
+</body>
+</html>
+
+<div style="height: 200px; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 50px;">
+</div>
+

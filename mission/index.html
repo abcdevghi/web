@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preload" href="/FiraSansExtraCondensed-Medium.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="icon" href="/truef.png" id="icon">
+    <meta property="og:site_name" content="thisistrueuser">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="thisistrueuser > CIU Mission" />
+    <meta property="og:description" content="I thought this would be useful for CIU players idk." />
+    <meta property="og:url" content="https://trueuser.tk/mission" />
+    <meta property="og:image" content="https://trueuser.tk/truef.png" />
+    <meta name="theme-color" content="#0072FF">
+    <link rel="stylesheet" href="/style.css">
+    <title>CIU Mission - thisistrueuser</title>
+</head>
+<body>
+    <div class="topnav" style="font-family: Varela">
+        <nav>
+            <a href="/" class="button">‹ Home</a>
+            <a class="active button">CIU Mission</a>
+        </nav>
+    </div>
+
+    <br>
+    
+    <img hidden src="/missi.svg" alt="sus" id="sus">
+    <canvas hidden id="myCanvas" width="680" height="115"></canvas>
+    
+    <br><br>
+    
+    <form class="form" target="dummyframe">
+        <label for="cname">Codename: </label>
+        <input class="input" type="text" id="cname" placeholder="Codename">
+        <button type="button" class="button2" onclick="be()">
+            <img src="/this.svg" height="16" width="16">
+        </button>
+        
+        <label for="ic">Icon URL: </label>
+        <input class="input" id="ic" placeholder="./invasion.svg" value="./invasion.svg">
+        <br><br>
+        
+        <label for="leng">Length: </label>
+        <input class="input" type="number" id="leng" min="0" max="8" step="1" placeholder="1-8">
+        <button type="button" class="button2" onclick="b()">
+            <img src="/this.svg" height="16" width="16">
+        </button>
+        
+        <label for="dif">Difficulty: </label>
+        <input class="input" type="number" id="dif" min="0" max="8" step="1" placeholder="1-8">
+        <button type="button" class="button2" onclick="e()">
+            <img src="/this.svg" height="16" width="16">
+        </button>
+        <br><br>
+        
+        <button type="button" class="button" onclick="b(); e(); be()">
+            <img src="/this.svg" height="16" width="16"> Randomize All
+        </button>
+        <br><br>
+        
+        <button type="button" class="button" onclick="load()">Generate</button>
+    </form>
+    
+    <img hidden alt="out" id="out">
+    <img style="display: none; margin-left: 27%" src="./pls.png" id="wait" width="680" height="115">
+    
+    <br><br>
+    
+    <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+
+    <script>
+        // Font faces for canvas
+        const fontFaces = [
+            new FontFace('teko', 'url("/teko.ttf")'),
+            new FontFace('Firaw', 'url("/FiraSansExtraCondensed-Medium.ttf")')
+        ];
+        
+        fontFaces.forEach(font => {
+            document.fonts.add(font);
+            font.load();
+        });
+
+        // Word lists placeholder - replace with actual word lists
+        const ADJECTIVES = ['abandoned', 'able', 'absolute', 'adorable', 'adventurous']; // Add full adjective list here
+        const NOUNS = ['people', 'history', 'way', 'art', 'world']; // Add full noun list here
+
+        function mathRandomInt(a, b) {
+            if (a > b) {
+                var c = a;
+                a = b;
+                b = c;
+            }
+            return Math.floor(Math.random() * (b - a + 1) + a);
+        }
+
+        function listsGetRandomItem(list) {
+            return list[Math.floor(Math.random() * list.length)];
+        }
+
+        function textToTitleCase(str) {
+            return str.replace(/\S+/g, function(txt) {
+                return txt[0].toUpperCase() + txt.substring(1).toLowerCase();
+            });
+        }
+
+        function blobout(canvas) {
+            const oldImg = document.getElementById('out');
+            const newImg = document.createElement('img');
+            newImg.setAttribute("id", "out");
+            
+            // Use data URL instead of blob URL to comply with CSP
+            const dataURL = canvas.toDataURL('image/png');
+            newImg.src = dataURL;
+            
+            document.body.replaceChild(newImg, oldImg);
+        }
+
+        function clearCanvas() {
+            const canvas = document.getElementById("myCanvas");
+            const context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function drawMissionTemplate() {
+            const canvas = document.getElementById("myCanvas");
+            const ctx = canvas.getContext("2d");
+            const img = document.getElementById("sus");
+            ctx.drawImage(img, -1, 0);
+        }
+
+        function load() {
+            clearCanvas();
+            drawMissionTemplate();
+            
+            const canvas = document.getElementById("myCanvas");
+            const ctx = canvas.getContext("2d");
+            const codename = document.getElementById("cname").value;
+            const iconUrl = document.getElementById("ic").value;
+            const length = parseInt(document.getElementById("leng").value) || 0;
+            const difficulty = parseInt(document.getElementById("dif").value) || 0;
+
+            // Draw codename
+            ctx.font = "35px Firaw";
+            ctx.fillStyle = "#D9796D";
+            ctx.fillText(codename, 115, 70);
+
+            // Draw length indicators (cyan)
+            ctx.fillStyle = "#00FFFF";
+            let yPos = 99;
+            for (let i = 0; i < length; i++) {
+                ctx.fillRect(650, yPos, 9, 9);
+                yPos -= 13.1;
+            }
+
+            // Draw difficulty indicators (orange)
+            ctx.fillStyle = "#FF8000";
+            yPos = 99;
+            for (let i = 0; i < difficulty; i++) {
+                ctx.fillRect(663, yPos, 9, 9);
+                yPos -= 13.1;
+            }
+
+            // Load and draw icon
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.src = iconUrl;
+
+            function checkImageLoad() {
+                if (!img.complete) {
+                    document.getElementById("wait").style.display = "block";
+                    setTimeout(checkImageLoad, 25);
+                } else {
+                    try {
+                        ctx.drawImage(img, 20, 15, 80, 80);
+                    } catch (e) {
+                        console.warn('Could not load image:', iconUrl);
+                    }
+                    document.getElementById("wait").style.display = "none";
+                    blobout(canvas);
+                }
+            }
+
+            checkImageLoad();
+        }
+
+        // Randomize length
+        function b() {
+            document.getElementById("leng").value = mathRandomInt(0, 8);
+        }
+
+        // Randomize difficulty
+        function e() {
+            document.getElementById("dif").value = mathRandomInt(0, 8);
+        }
+
+        // Randomize codename
+        function be() {
+            const adjective = listsGetRandomItem(ADJECTIVES);
+            const noun = listsGetRandomItem(NOUNS);
+            document.getElementById("cname").value = textToTitleCase(adjective + ' ' + noun);
+        }
+
+        // Initialize mission template on load
+        window.addEventListener('load', function() {
+            drawMissionTemplate();
+        });
+
+        // Check for cookie and update icon
+        if (document.cookie.includes("null_medal=true")) {
+            document.getElementById("icon").href = "/trueg.png";
+        }
+    </script>
+</body>
+</html>

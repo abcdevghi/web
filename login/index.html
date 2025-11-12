@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/truef.png" id="icon">
+  <meta property="og:site_name" content="thisistrueuser">
+  <meta property="og:title" content="Dumb Login">
+  <meta property="og:description" content="It's terrible">
+  <title>Dumb Login</title>
+  <style>
+    #userI, #passI {
+      display: inline-block;
+      min-width: 100px;
+      border: 1px solid #444;
+      padding: 4px;
+      margin: 4px;
+      background: #111;
+      color: lime;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+    <link rel="stylesheet" href="/style.css">
+  <nav>
+    <a href="/" class="button">‹ Home</a>
+    <a class="active button">Login</a>
+  </nav>
+  <header>Log in</header>
+
+  <select id="return-reason" onkeydown="IgnoreAlpha(event)">
+    <option disabled selected>Please select...</option>
+  </select><br>
+
+  <button onclick="fillUsername()">Fill in Username</button><a id="userI"></a><br>
+  <button onclick="fillPassword()">Fill in Password</button><a id="passI"></a><br>
+  <button onclick="resetFields()">Reset</button>
+  <button onclick="tryLogin()">Log in</button>
+
+<script>
+  const select = document.getElementById('return-reason');
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  for (let c of chars) {
+    let opt = document.createElement('option');
+    opt.text = c;
+    select.appendChild(opt);
+  }
+
+  function fillUsername() {
+    const el = document.getElementById('userI');
+    el.textContent += select.value;
+    randomizeOptions();
+    checkGaster(el.innerText);
+    checkLengths();
+  }
+
+  function fillPassword() {
+    const el = document.getElementById('passI');
+    el.textContent += select.value;
+    randomizeOptions();
+    checkLengths();
+  }
+
+  function resetFields() {
+    document.getElementById('userI').textContent = '';
+    document.getElementById('passI').textContent = '';
+  }
+
+  function checkGaster(current) {
+    if (current === 'GASTER') {
+      window.location.href = "https://undertale.com";
+    }
+  }
+
+  function checkLengths() {
+    const u = document.getElementById('userI').innerText.length;
+    const p = document.getElementById('passI').innerText.length;
+    if (u > 8 || p > 8) {
+      window.location.href = "https://youareanidiot.wzq02.top/";
+    }
+  }
+
+  function tryLogin() {
+    const user = document.getElementById('userI').innerText.trim().toUpperCase();
+
+    if (user === 'GASTER') {
+      window.location.href = "https://undertale.com";
+      return;
+    }
+    alert("You're feeling lucky?");
+    const q = encodeURIComponent(user);
+    window.location.href = `https://www.google.com/search?btnI=I&q=${q}&sourceid=navclient`;
+  }
+
+  function randomizeOptions() {
+    let opts = Array.from(select.options).filter(o => !o.disabled);
+    let vals = opts.map(o => o.text);
+    opts.forEach(o => {
+      let idx = Math.floor(Math.random() * vals.length);
+      o.text = vals.splice(idx, 1)[0];
+    });
+  }
+
+  function IgnoreAlpha(e) {
+    e = e || window.event;
+    if (e.keyCode >= 65 && e.keyCode <= 90) {
+      e.preventDefault();
+      return false;
+    }
+  }
+
+  randomizeOptions();
+  if (document.cookie.includes("null_medal=true")) {
+    document.getElementById("icon").href = "/trueg.png";
+  }
+</script>
+</body>
+</html>

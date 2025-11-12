@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base href="/tank/">
+    <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' ws: wss:;">
+    <title>the tankening</title>
+    <meta name="title" content="the tankening" />
+    <meta name="description" content="web-based online artillery game" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="the tankening" />
+    <meta property="og:description" content="web-based online artillery game" />
+    <meta property="og:image" content="./tank.png" />
+    <link rel="preload" href="/SpaceGrotesk-VariableFont_wght.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+<style>
+@font-face {
+  font-family: 'SpaceGrotesk';
+  src: url('/SpaceGrotesk-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+}
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'SpaceGrotesk', sans-serif;
+        background: #1e1e2e; /* Mocha base */
+        color: #cdd6f4; /* Mocha text */
+    }
+    #ui {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 1000;
+        padding: 10px;
+        border-radius: 8px;
+        min-width: 200px;
+    }
+    #gameUI {
+        position: fixed;
+        top: 10px;
+        right: 0px;
+        z-index: 1000;
+        padding: 0px;
+        border-radius: 8px;
+        min-width: 200px;
+    }
+    #volleyDisplay {
+        position: fixed;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 16px;
+        color: #f9e2af; /* Mocha yellow */
+    }
+    button {
+        background: #89b4fa; /* Mocha blue */
+        color: #1e1e2e;
+        border: none;
+        padding: 8px 16px;
+        margin: 5px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    button:hover {
+        background: #74c7ec; /* lighter blue */
+    }
+    button:disabled {
+        background: #585b70; /* Mocha surface2 */
+        color: #a6adc8;
+        cursor: not-allowed;
+    }
+    input {
+        padding: 8px;
+        margin: 5px;
+        border-radius: 4px;
+        border: 1px solid #45475a; /* Mocha surface1 */
+        background: transparent;
+        color: #cdd6f4;
+        width: 150px;
+    }
+    .status {
+        margin: 10px 0;
+        border-radius: 4px;
+        padding: 8px;
+    }
+    .connected {
+        background: #a6e3a1; /* Mocha green */
+        color: #1e1e2e;
+    }
+    .error {
+        background: #f38ba8; /* Mocha red */
+        color: #1e1e2e;
+    }
+    .player-item {
+        padding: 2px 16px;
+        margin: 2px 0;
+        text-align: right
+    }
+.current-turn {
+    background: rgba(68, 70, 90, 0.5);
+    font-weight: bold;
+    border-top-left-radius: 9999px;
+    border-bottom-left-radius: 9999px;
+}
+    #chat {
+        position: fixed;
+        bottom: 10px;
+        left: 10px;
+        width: 250px;
+        height: 150px;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+    }
+    #chatMessages {
+        flex: 1;
+        overflow-y: auto;
+        margin-bottom: 10px;
+        font-size: 12px;
+    }
+    #chatInput {
+        width: 100%;
+        padding: 4px;
+        border: 1px solid #585b70;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    #generateBtn {
+        background-color: #a6e3a1; /* Mocha green */
+        color: #1e1e2e;
+    }
+    .row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 8px;
+        align-items: center;
+    }
+    .row input {
+        flex: 1;
+        min-width: 0;
+    }
+    #connectionPanel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+body {
+    user-select: none;
+}
+
+#chat,
+#chat * {
+    user-select: text;
+}
+
+input,
+textarea {
+    user-select: text;
+}
+
+</style>
+</head>
+
+<body>
+    <div id="ui">
+        <div id="connectionPanel" style="display: block">
+    <h1 style="color: #f9e2af; margin-bottom: 20px;">the tankening</h1>
+    <div id="preJoinPlayerCount" style="margin-bottom: 10px; font-size: 16px; color: #a6e3a1;">
+        Players online: <span id="preJoinCount">...</span>
+    </div>
+    <div class="row">
+        <input type="text" id="username" placeholder="Your username" value="Player">
+        <button id="connectBtn">Join</button>
+    </div>
+        </div>
+        
+        <!-- Game controls moved to left panel -->
+        <div id="gameControls" style="display: none">
+            <div>Angle: <span id="angleVal">...</span>°</div>
+            <div>Power: <span id="powerVal">...</span></div>
+        </div>
+    </div>
+
+    <div id="volleyDisplay" style="display: none">
+        Volley <span id="volleyCount">1</span>
+    </div>
+
+    <div id="gameUI" style="display: none">
+        <div id="playerList">...</div>
+    </div>
+
+    <div id="chat" style="display: none">
+        <div id="chatMessages"></div>
+        <input type="text" id="chatInput" placeholder="Type a message..." maxlength="100">
+    </div>
+
+    <script>
+        window.addEventListener('error', function(e) {
+            if (e.target.tagName === 'SCRIPT') {
+                console.error('Script loading error:', e);
+            }
+        }, true);
+    </script>
+
+    <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.2.4/pixi.min.js"></script>
+    <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <script type="application/javascript" src="pallete.js"></script>
+    <script type="application/javascript" src="noise.js"></script>
+    <script>
+    // --- Live player count before joining ---
+    function fetchPreJoinPlayerCount() {
+        fetch('/tank/playercount')
+            .then(r => r.json())
+            .then(data => {
+                const el = document.getElementById('preJoinCount');
+                if (el && typeof data.count === 'number') el.textContent = data.count;
+            })
+            .catch(() => {
+                const el = document.getElementById('preJoinCount');
+                if (el) el.textContent = '?';
+            });
+    }
+    setInterval(fetchPreJoinPlayerCount, 1000);
+    fetchPreJoinPlayerCount();
+    </script>
+    <script type="application/javascript" src="game4.js"></script>
+</body>
+
+</html>

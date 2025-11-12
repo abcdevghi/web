@@ -1,0 +1,250 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preload" href="https://trueuser.tk/VarelaRound-Regular.ttf" as="font" type="font/ttf" crossorigin>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<title>Request</title>
+<meta property="og:site_name" content="thisistrueuser">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Request" />
+<meta property="og:description" content="yo" />
+<meta property="og:url" content="https://trueuser.tk/" />
+<meta property="og:image" content="https://trueuser.tk/truef.png" />
+<meta name="theme-color" content="#2f3136">
+
+<link rel="icon" href="/truef.png">
+
+<style>
+  @font-face {
+    font-family: 'Varela'; /*a name to be used later*/
+    src: url("https://trueuser.tk/VarelaRound-Regular.ttf"); /*URL to font*/
+}
+.tooltip {
+  position: relative;
+  position: absolute;
+  border-bottom: 1px dotted black;
+}
+    
+html {font-family: Varela;  background-color: #1b2538; color: white;   margin-left: 10%; margin-right: 10%;}
+    
+@media only screen and (max-width: 780px) {
+  html {
+    margin-left: 0;
+    margin-right: 0;
+  };
+}
+@media only screen and (max-width: 780px) {
+  #true {
+      display: none
+  }
+}
+header {font-size: 30px; font-weight: bold; margin-top: 2%}
+p {font-size: 16px; line-height: 20px}
+.topnav {
+  overflow: hidden;
+  position: sticky;
+}
+
+.topnav a {
+  float: left;
+  color: white;
+  text-align: center;
+  padding: 10px 10px;
+  text-decoration: none;
+  font-size: 16px;  user-select: none;   
+  text-shadow: none;
+    border-radius: 5px
+}
+
+.topnav a:hover {
+  background-color: #12192a;
+}
+
+.topnav a.active {
+  background-image: linear-gradient(to right, #118bd8 , #076fc1);
+  color: White;
+}
+
+#more {display: none}
+.button {   background-image: linear-gradient(to right, #118bd8 , #076fc1);
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px; border-radius: 5px; cursor: pointer; padding: 10px 10px; }
+.button:active {
+  box-shadow: 0 0 5px rgba(85, 160, 202, 0.7);
+}
+.card:hover {
+  box-shadow: 0 0 5px rgba(85, 160, 202, 0.7);
+}
+.xt-ct-menu {
+        position: relative;
+        display: inline-block;
+      float: right;
+    }
+    .xtlab-ctmenu-item:hover {
+       background-color: #12192a;
+    }
+
+    .xtlab-ctmenu-item {
+        color: white;
+        padding: 10px 10px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px
+    }
+
+    .xtlab-ctmenu-sub a {
+        color: white;
+        padding: 10px 10px;
+        text-decoration: none;
+        display: block;
+    }
+    .xtlab-ctmenu-sub a:hover {
+        background-color: #12192a;
+        border: none;
+        
+    }
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  width: 40%;
+  border-radius: 5px;
+  background-color: #000000; border-color: #000000; border-width: 10px; margin: 5px
+}
+
+a {text-decoration: none; color: white}
+img {
+  border-radius: 5px 5px 0 0;
+}
+
+.container {
+  padding: 2px 16px;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 25px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 15px;
+  width: 15px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+</style>
+</head>
+<div>
+
+<div class="topnav">
+  <a href="/" title="For all things trueuser">‹ Home</a>
+    <a class="active">Request</a><div class="xt-ct-menu" height="20" width="20">
+    <div class="xtlab-ctmenu-item" id="tog"><img src="/link.png" height="20" width="20"/></div>
+    
+</div>
+    <div class="xtlab-ctmenu-sub" id="this" style="float: right; postion: absolute">
+        <a href="https://www.reddit.com/user/realPacManVN"><img src="/reddit.svg" height="20" width="20"/></a>
+        <a href="https://youtube.com/thisistrueuser"><img src="/youtube.svg" height="20" width="20"/></a>
+        <a href="https://twitter.com/trueuser_"><img src="/twitter.svg" height="20" width="20"/></a>
+        <a href="https://roblox.com/groups/8911797/trueusers-room#!/"><img src="/roblox.png" height="20" width="20"/></a>
+        <a href="/discord"><img src="/disc.png" height="20" width="20"/></a>
+        <a href="https://ko-fi.com/trueuser"><img src="/kofi.png" height="20" width="20"/></a>
+    </div>
+</div><body>
+<html>
+<head>
+  <title>Output</title>
+</head>
+<body>
+    <header id="hd"></header>
+  <p id="input"></p>
+
+  <script>
+function markdownToHtml(markdown) {
+  // Replace line breaks with <br> tags
+  let html = markdown.replace(/(?:\r\n|\r|\n)/g, '<br>');
+
+  // Replace bold text with <strong> tags
+  html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+  // Replace italic text with <em> tags
+  html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+  // Replace headers with <h1> - <h6> tags
+  html = html.replace(/^# (.*)$/gm, '<h1>$1</h1>');
+  html = html.replace(/^## (.*)$/gm, '<h2>$1</h2>');
+  html = html.replace(/^### (.*)$/gm, '<h3>$1</h3>');
+  html = html.replace(/^#### (.*)$/gm, '<h4>$1</h4>');
+  html = html.replace(/^##### (.*)$/gm, '<h5>$1</h5>');
+  html = html.replace(/^###### (.*)$/gm, '<h6>$1</h6>');
+
+  return html;
+}
+      function Update() {
+          const xhr = new XMLHttpRequest();
+xhr.open("GET", "https://api.trueuser.tk/output", true);
+xhr.onreadystatechange = function() {
+if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+const response = JSON.parse(this.responseText);
+document.getElementById("hd").innerHTML = response.hd;
+document.getElementById("input").innerHTML = markdownToHtml(response.input);
+}
+};
+xhr.send();
+      }
+    Update()
+setInterval(Update, 2000);
+
+
+  </script>
+</body>
+</html>
