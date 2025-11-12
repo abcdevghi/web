@@ -125,6 +125,7 @@ main {
   user-select: none;
   cursor: pointer;
   display: inline-block;
+  font-family: 'Varela';
   transition: transform var(--fast) var(--ease-back), background-color var(--fast), box-shadow var(--fast);
 }
 
@@ -150,7 +151,6 @@ img:hover,
 
 img:active,
 .version:active {
-    filter: saturate(1);
     transform: rotate(10deg) scale(0.90);
 }
 
