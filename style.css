@@ -150,7 +150,7 @@ img:hover,
 
 img:active,
 .version:active {
-    filter: saturate(5);
+    filter: saturate(1);
     transform: rotate(10deg) scale(0.90);
 }
 
