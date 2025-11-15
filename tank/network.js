@@ -12,6 +12,7 @@ export class NetworkManager {
 
     initialize() {
         console.log('Initializing network connection...');
+        console.log('Attempting to connect to:', WS_URL);
         this.socketReady = false;
         this.messageQueue = [];
 
@@ -27,10 +28,17 @@ export class NetworkManager {
             }
         }
 
-        this.socket = new WebSocket(WS_URL);
+        try {
+            this.socket = new WebSocket(WS_URL);
+            console.log('WebSocket object created, readyState:', this.socket.readyState);
+        } catch (e) {
+            console.error('Failed to create WebSocket:', e);
+            return;
+        }
 
         this.socket.onopen = () => {
             console.log('WebSocket connection opened');
+            console.log('WebSocket readyState:', this.socket.readyState);
             this.socketReady = true;
 
             while (this.messageQueue.length > 0) {
@@ -41,6 +49,7 @@ export class NetworkManager {
 
         this.socket.onclose = (event) => {
             console.log('WebSocket connection closed:', event.code, event.reason);
+            console.log('Clean closure:', event.wasClean);
             this.socketReady = false;
 
             if (event.code !== 1000) {
@@ -55,6 +64,9 @@ export class NetworkManager {
 
         this.socket.onerror = (err) => {
             console.error('WebSocket error:', err);
+            console.error('WebSocket readyState at error:', this.socket?.readyState);
+            console.error('Error type:', err.type);
+            console.error('Error target:', err.target);
             this.socketReady = false;
         };
 
@@ -66,6 +78,15 @@ export class NetworkManager {
                 console.error('Error parsing message:', e, event.data);
             }
         };
+
+        // Add timeout to detect stuck connections
+        setTimeout(() => {
+            if (!this.socketReady && this.socket) {
+                console.error('WebSocket connection timeout after 5 seconds');
+                console.error('Current readyState:', this.socket.readyState);
+                console.error('ReadyState meanings: 0=CONNECTING, 1=OPEN, 2=CLOSING, 3=CLOSED');
+            }
+        }, 5000);
     }
 
     send(data) {
