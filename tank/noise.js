@@ -57,3 +57,5 @@ var noise = (function() {
   };
   return module;
 })();
+
+export default noise;

@@ -1,4 +1,4 @@
-const PALETTE = {
+export const PALETTE = {
     base: 0x1e1e2e,
     mantle: 0x181825,
     crust: 0x11111b,
