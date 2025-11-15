@@ -27,20 +27,8 @@ export const UPDATE_INTERVAL = 100;
 export const RESPONSIVE_INTERVAL = 50;
 export const PREDICTION_TIMEOUT = 5000;
 
-// WebSocket URL - Automatically determine based on current host
-export const WS_URL = (() => {
-    // Check if we're on localhost/local development
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        return 'ws://localhost:9550/';
-    }
-    // Check if we're on the production domain
-    if (window.location.hostname === 'trueuser.is-a.dev') {
-        return 'wss://dono-01.danbot.host:9550/';
-    }
-    // Fallback to current host with WSS
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    return `${protocol}//${window.location.hostname}:9550/`;
-})();
+// WebSocket URL - Point to your remote server
+export const WS_URL = 'wss://dono-01.danbot.host:9550/';
 
 // Player colors (used with PALETTE)
 export const PLAYER_COLORS = ['green', 'red', 'blue', 'yellow', 'mauve', 'pink', 'teal', 'peach'];
