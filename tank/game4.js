@@ -1127,7 +1127,7 @@ function initializeNetwork() {
         }
     }
 
-    socket = new WebSocket('ws://dono-01.danbot.host:9550/');
+    socket = new WebSocket('wss://dono-01.danbot.host:9550/');
 
     socket.onopen = () => {
         console.log('WebSocket connection opened');

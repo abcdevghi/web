@@ -175,7 +175,7 @@ textarea {
         <div id="connectionPanel" style="display: block">
     <h1 style="color: #f9e2af; margin-bottom: 20px;">the tankening</h1>
     <div id="preJoinPlayerCount" style="margin-bottom: 10px; font-size: 16px; color: #a6e3a1;">
-        Players online: <span id="preJoinCount">...</span>
+        Players online: <span id="preJoinCount">IDK...</span>
     </div>
     <div class="row">
         <input type="text" id="username" placeholder="Your username" value="Player">
@@ -216,23 +216,6 @@ textarea {
 
     <script type="application/javascript" src="pallete.js"></script>
     <script type="application/javascript" src="noise.js"></script>
-    <script>
-    // --- Live player count before joining ---
-    function fetchPreJoinPlayerCount() {
-        fetch('/tank/playercount')
-            .then(r => r.json())
-            .then(data => {
-                const el = document.getElementById('preJoinCount');
-                if (el && typeof data.count === 'number') el.textContent = data.count;
-            })
-            .catch(() => {
-                const el = document.getElementById('preJoinCount');
-                if (el) el.textContent = '?';
-            });
-    }
-    setInterval(fetchPreJoinPlayerCount, 1000);
-    fetchPreJoinPlayerCount();
-    </script>
     <script type="application/javascript" src="game4.js"></script>
 </body>
 
