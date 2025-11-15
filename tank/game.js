@@ -4,6 +4,8 @@ import { TERR_WIDTH, TERR_HEIGHT, TANK_W, TANK_H, ZOOM_EASE, MAX_SCALE, MIN_SCAL
 import { NetworkManager, createMessageHandlers } from './network.js';
 import { TerrainManager } from './terrain.js';
 import { TankManager, BulletManager, EffectsManager, TankFavicon } from './tank.js';
+import { PALETTE } from './palette.js';
+import noise from './noise.js';
 
 export class Game {
     constructor(PALETTE, noise) {
