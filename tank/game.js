@@ -153,30 +153,28 @@ export class Game {
         this.app.ticker.start();
     }
 
-    // Chat input handler
-    const chatInput = document.getElementById('chatInput');
-    chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && chatInput.value.trim()) {
-            const message = chatInput.value.trim();
-            this.network.send({
-                type: 'chat',
-                message: message
-            });
-            chatInput.value = '';
-        }
-    });
-
     handlePlayerInput() {
         if (!this.myTank || this.bulletManager.bullets.length > 0 || this.gameState !== 'playing') {
             return;
         }
 
+        // Chat input handler
+        const chatInput = document.getElementById('chatInput');
         if (document.activeElement && document.activeElement.id === 'chatInput') {
+            // Check if Enter was pressed
+            if (this.keys['Enter'] && chatInput.value.trim()) {
+                const message = chatInput.value.trim();
+                this.network.send({
+                    type: 'chat',
+                    message: message
+                });
+                chatInput.value = '';
+                chatInput.blur(); // Optional: unfocus after sending
+            }
             return;
         }
 
         let moved = false;
-
         if (this.isMyTurn) {
             if (this.keys['KeyA']) {
                 const newX = Math.max(TANK_W/2, this.myTank.x - 0.5);
@@ -194,12 +192,10 @@ export class Game {
                     moved = true;
                 }
             }
-
             if (moved) {
                 this.sendTankUpdate();
             }
         }
-
         const angleEl = document.getElementById('angleVal');
         const powerEl = document.getElementById('powerVal');
         if (angleEl) angleEl.textContent = Math.round(this.myTank.barrelAngleDeg + 90);
