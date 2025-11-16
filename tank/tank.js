@@ -857,11 +857,6 @@ export class TankFavicon {
         return color; // Already a hex string
     }
 
-    getCacheKey(color, isMyTurn, gameState) {
-        const colorKey = this.colorToHex(color);
-        return `${colorKey}-${isMyTurn}-${gameState}`;
-    }
-
     drawTank(color, isMyTurn = false, gameState = 'playing') {
         const ctx = this.ctx;
         const size = 32;
@@ -926,11 +921,15 @@ export class TankFavicon {
         ctx.stroke();
     }
 
+    getCacheKey(playerId, isMyTurn, gameState) {
+        return `${playerId}-${isMyTurn}-${gameState}`;
+    }
+
     updateFavicon(currentPlayerId, gameState = 'playing', playerUsernames = null) {
         if (!this.currentFaviconLink) this.ensureFaviconLink();
 
         if (gameState === 'waiting' || gameState === 'ended') {
-            const key = this.getCacheKey('waiting', false, gameState);
+            const key = `waiting-${gameState}`;
             if (key === this.lastKey) return;
             this.lastKey = key;
 
@@ -950,7 +949,6 @@ export class TankFavicon {
         let isMyTurn = false;
 
         if (currentPlayerId) {
-            // Use game's playerUsernames if not provided
             const usernames = playerUsernames || this.game?.playerUsernames;
             if (usernames) {
                 const allPlayers = Array.from(usernames.keys()).sort();
@@ -960,7 +958,7 @@ export class TankFavicon {
             }
         }
 
-        const key = this.getCacheKey(color, isMyTurn, gameState);
+        const key = this.getCacheKey(currentPlayerId, isMyTurn, gameState);
         if (key === this.lastKey) return;
         this.lastKey = key;
 
