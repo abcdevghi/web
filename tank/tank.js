@@ -815,9 +815,10 @@ export class EffectsManager {
 
 // Favicon System
 export class TankFavicon {
-    constructor(PALETTE, getPlayerColor) {
+    constructor(PALETTE, getPlayerColor, game) {
         this.PALETTE = PALETTE;
         this.getPlayerColor = getPlayerColor;
+        this.game = game; // Store game reference
         this.canvas = document.createElement('canvas');
         this.canvas.width = 32;
         this.canvas.height = 32;
@@ -842,12 +843,23 @@ export class TankFavicon {
         document.head.appendChild(this.currentFaviconLink);
     }
 
-    pixiColorToHex(color) {
-        return '#' + (color & 0xFFFFFF).toString(16).padStart(6, '0');
+    colorToHex(color) {
+        // Handle both number (pixi color) and {r, g, b} object
+        if (typeof color === 'number') {
+            return '#' + (color & 0xFFFFFF).toString(16).padStart(6, '0');
+        }
+        if (color && typeof color === 'object' && 'r' in color) {
+            const r = color.r.toString(16).padStart(2, '0');
+            const g = color.g.toString(16).padStart(2, '0');
+            const b = color.b.toString(16).padStart(2, '0');
+            return `#${r}${g}${b}`;
+        }
+        return color; // Already a hex string
     }
 
     getCacheKey(color, isMyTurn, gameState) {
-        return `${color}-${isMyTurn}-${gameState}`;
+        const colorKey = this.colorToHex(color);
+        return `${colorKey}-${isMyTurn}-${gameState}`;
     }
 
     drawTank(color, isMyTurn = false, gameState = 'playing') {
@@ -864,7 +876,7 @@ export class TankFavicon {
             return;
         }
 
-        const tankColor = typeof color === 'number' ? this.pixiColorToHex(color) : (color || '#a6e3a1');
+        const tankColor = this.colorToHex(color) || '#a6e3a1';
         const crustColor = '#11111b';
 
         if (isMyTurn) {
@@ -917,8 +929,8 @@ export class TankFavicon {
     updateFavicon(currentPlayerId, gameState = 'playing', playerUsernames = null) {
         if (!this.currentFaviconLink) this.ensureFaviconLink();
 
-        if (gameState === 'waiting') {
-            const key = this.getCacheKey('waiting', false, 'waiting');
+        if (gameState === 'waiting' || gameState === 'ended') {
+            const key = this.getCacheKey('waiting', false, gameState);
             if (key === this.lastKey) return;
             this.lastKey = key;
 
@@ -927,7 +939,7 @@ export class TankFavicon {
                 return;
             }
 
-            this.drawTank(null, false, 'waiting');
+            this.drawTank(null, false, gameState);
             const dataUrl = this.canvas.toDataURL('image/png');
             this.cache.set(key, dataUrl);
             this.currentFaviconLink.href = dataUrl;
@@ -937,11 +949,15 @@ export class TankFavicon {
         let color = null;
         let isMyTurn = false;
 
-        if (currentPlayerId && playerUsernames) {
-            const allPlayers = Array.from(playerUsernames.keys()).sort();
-            const playerIndex = allPlayers.indexOf(currentPlayerId);
-            color = this.getPlayerColor(playerIndex, this.PALETTE);
-            isMyTurn = currentPlayerId === this.game?.myPlayerId;
+        if (currentPlayerId) {
+            // Use game's playerUsernames if not provided
+            const usernames = playerUsernames || this.game?.playerUsernames;
+            if (usernames) {
+                const allPlayers = Array.from(usernames.keys()).sort();
+                const playerIndex = allPlayers.indexOf(currentPlayerId);
+                color = this.getPlayerColor(playerIndex, this.PALETTE);
+                isMyTurn = currentPlayerId === this.game?.myPlayerId;
+            }
         }
 
         const key = this.getCacheKey(color, isMyTurn, gameState);
@@ -968,7 +984,10 @@ export class TankFavicon {
     }
 
     animateTurn(currentPlayerId) {
-        const originalUpdate = () => this.updateFavicon(currentPlayerId);
+        // Don't animate if it's not initialized yet
+        if (!this.game?.playerUsernames) return;
+
+        const originalUpdate = () => this.updateFavicon(currentPlayerId, 'playing');
 
         this.ctx.clearRect(0, 0, 32, 32);
         this.ctx.fillStyle = '#ffffff';
