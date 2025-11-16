@@ -153,6 +153,19 @@ export class Game {
         this.app.ticker.start();
     }
 
+    // Chat input handler
+    const chatInput = document.getElementById('chatInput');
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && chatInput.value.trim()) {
+            const message = chatInput.value.trim();
+            this.network.send({
+                type: 'chat',
+                message: message
+            });
+            chatInput.value = '';
+        }
+    });
+
     handlePlayerInput() {
         if (!this.myTank || this.bulletManager.bullets.length > 0 || this.gameState !== 'playing') {
             return;
