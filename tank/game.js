@@ -509,10 +509,10 @@ export class Game {
 
         const playerName = this.getPlayerUsername(newCurrentPlayer);
         if (this.isMyTurn) {
-            this.addChatMessage(`🎯 Your turn!`);
+            this.addChatMessage(`Your turn!`);
             console.log('🎮 MY TURN - player can now shoot');
         } else {
-            this.addChatMessage(`⏳ ${playerName}'s turn`);
+            this.addChatMessage(`${playerName}'s turn`);
             console.log('⏳ OTHER PLAYER TURN - waiting for:', playerName);
         }
 
