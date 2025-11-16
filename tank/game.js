@@ -785,12 +785,22 @@ export class Game {
         return playerId.slice(0, 8);
     }
 
-    addChatMessage(message) {
+    addChatMessage(message, playerId = null) {
         const chatMessages = document.getElementById('chatMessages');
         if (!chatMessages) return;
-        const div = document.createElement('div');
-        div.textContent = `${message}`;
-        chatMessages.appendChild(div);
+
+        const msgDiv = document.createElement('div');
+
+        if (playerId) {
+            const allPlayers = Array.from(this.playerUsernames.keys()).sort();
+            const playerIndex = allPlayers.indexOf(playerId);
+            const playerColor = getPlayerColor(playerIndex, this.PALETTE);
+
+            msgDiv.style.color = `rgb(${playerColor.r}, ${playerColor.g}, ${playerColor.b})`;
+        }
+
+        msgDiv.textContent = message;
+        chatMessages.appendChild(msgDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 

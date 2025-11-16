@@ -206,7 +206,7 @@ export function createMessageHandlers(game) {
         },
 
         'chat': (data) => {
-            game.addChatMessage(`${data.username}: ${data.message}`);
+            game.addChatMessage(`${data.username}: ${data.message}`, data.playerId);
         },
 
         'game-state-sync': (data) => {
