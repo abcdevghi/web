@@ -339,11 +339,6 @@ export class Game {
             return;
         }
 
-        if (!this.canFire) {
-            console.log('❌ FIRE BLOCKED: canFire is false');
-            return;
-        }
-
         if (this.bulletManager.bullets.length > 0) {
             console.log('❌ FIRE BLOCKED: Bullets in flight:', this.bulletManager.bullets.length);
             return;

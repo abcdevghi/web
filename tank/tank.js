@@ -17,26 +17,21 @@ export class TankManager {
         g.hp = 50;
         g.playerId = playerId;
         g.eliminated = false;
-
         const TANK_BODY_WIDTH = TANK_W;
         const TANK_CORNER_RADIUS = 4;
-
         g.flying = false;
         g.settling = false;
         g.grounded = true;
         g.vx = 0;
         g.vy = 0;
-
         const body = new PIXI.Graphics()
         .beginFill(color)
         .drawRoundedRect(-TANK_BODY_WIDTH / 2, 0, TANK_BODY_WIDTH, TANK_H, TANK_CORNER_RADIUS)
         .endFill();
         g.addChild(body);
-
         const TRACK_WIDTH = TANK_BODY_WIDTH + 4;
         const TRACK_HEIGHT = 4;
         const TRACK_RADIUS = 3;
-
         const track = new PIXI.Graphics()
         .lineStyle(1, color)
         .beginFill(this.PALETTE.crust)
@@ -49,59 +44,52 @@ export class TankManager {
         )
         .endFill();
         g.addChild(track);
-
         g.hpBar = new PIXI.Graphics();
         this.world.addChild(g.hpBar);
-
         g.updateHpBar = () => {
             g.hpBar.clear();
             const pct = Math.max(0, g.hp / 50);
             let barColor = this.PALETTE.green;
             if (pct < 0.3) barColor = this.PALETTE.red;
             else if (pct < 0.6) barColor = this.PALETTE.yellow;
-
             const barWidth = TANK_W * 3;
             const barHeight = 4;
-
             g.hpBar.beginFill(this.PALETTE.surface0)
             .drawRect(-barWidth / 2, -barHeight / 2, barWidth, barHeight)
             .endFill();
-
             g.hpBar.beginFill(barColor)
             .drawRect(-barWidth / 2, -barHeight / 2, barWidth * pct, barHeight)
             .endFill();
         };
         g.updateHpBar();
-
         const barrel = new PIXI.Graphics()
         .beginFill(this.PALETTE.text)
         .drawRect(0, 1, 16, 2)
         .drawCircle(0, 2, 1)
         .endFill();
         barrel.pivot.set(0, 2);
-
         barrel.baseLength = 16;
         barrel.recoilAmount = 0;
         barrel.isRecoiling = false;
 
+        // Capture the barrel color in a closure variable
+        const barrelColor = this.PALETTE.text;
         barrel.triggerRecoil = function() {
             if (this.isRecoiling) return;
-
             this.isRecoiling = true;
             this.recoilAmount = 6;
             this.clear();
-            this.beginFill(this.PALETTE.text);
+            this.beginFill(barrelColor);
             this.drawRect(-this.recoilAmount, 1, this.baseLength - this.recoilAmount, 2);
             this.drawCircle(-this.recoilAmount, 2, 1);
             this.endFill();
-
             gsap.to(this, {
                 recoilAmount: 0,
                 duration: 0.8,
                 ease: "none",
                 onUpdate: () => {
                     this.clear();
-                    this.beginFill(this.PALETTE.text);
+                    this.beginFill(barrelColor);
                     this.drawRect(-this.recoilAmount, 1, this.baseLength - this.recoilAmount, 2);
                     this.drawCircle(-this.recoilAmount, 2, 1);
                     this.endFill();
@@ -111,10 +99,8 @@ export class TankManager {
                 }
             });
         }.bind(barrel);
-
         g.barrel = barrel;
         g.addChild(barrel);
-
         const nameText = new PIXI.Text(this.game.getPlayerUsername(playerId), {
             fontFamily: 'SpaceGrotesk',
             fontSize: 12,
@@ -123,7 +109,6 @@ export class TankManager {
         nameText.anchor.set(0.5, 1);
         g.nameText = nameText;
         this.world.addChild(nameText);
-
         const lockText = new PIXI.Text('[LOCKED IN]', {
             fontFamily: 'SpaceGrotesk',
             fontSize: 12,
@@ -133,15 +118,12 @@ export class TankManager {
         lockText.visible = false;
         g.lockText = lockText;
         this.world.addChild(lockText);
-
         g.angle = -Math.PI / 4;
         g.power = 30;
         g.barrelAngleDeg = -45;
         g.x = x;
-
         const surfaceY = this.terrainManager.getTerrainHeight(x);
         g.y = surfaceY - TANK_H;
-
         this.world.addChild(g);
         return g;
     }
