@@ -788,15 +788,17 @@ export class Game {
     addChatMessage(message, playerId = null) {
         const chatMessages = document.getElementById('chatMessages');
         if (!chatMessages) return;
-
         const msgDiv = document.createElement('div');
 
         if (playerId) {
             const allPlayers = Array.from(this.playerUsernames.keys()).sort();
             const playerIndex = allPlayers.indexOf(playerId);
             const playerColor = getPlayerColor(playerIndex, this.PALETTE);
-
             msgDiv.style.color = `rgb(${playerColor.r}, ${playerColor.g}, ${playerColor.b})`;
+        } else {
+            // System message styling
+            msgDiv.style.color = `rgb(${this.PALETTE.yellow.r}, ${this.PALETTE.yellow.g}, ${this.PALETTE.yellow.b})`;
+            msgDiv.style.fontWeight = 'bold';
         }
 
         msgDiv.textContent = message;

@@ -237,7 +237,7 @@ export function createMessageHandlers(game) {
                 game.volleyCount = 0;
 
                 game.tankManager.resetTanks(true);
-                game.addChatMessage('🚀 Game started!');
+                game.addChatMessage('Game started!');
 
                 setTimeout(() => {
                     const allPlayers = Array.from(game.playerUsernames.keys());
@@ -265,7 +265,7 @@ export function createMessageHandlers(game) {
         },
 
         'server-shutdown': (data) => {
-            game.addChatMessage('🔴 Server is shutting down...');
+            game.addChatMessage('Server is shutting down...');
             game.resetGameState();
         }
     };
