@@ -68,6 +68,12 @@ export class NetworkManager {
             console.error('Error type:', err.type);
             console.error('Error target:', err.target);
             this.socketReady = false;
+
+            // Show SSL warning
+            const sslWarning = document.getElementById('sslWarning');
+            if (sslWarning) {
+                sslWarning.style.display = 'block';
+            }
         };
 
         this.socket.onmessage = (event) => {
