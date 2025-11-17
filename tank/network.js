@@ -208,6 +208,8 @@ export function createMessageHandlers(game) {
             if (data.tankDamage && Object.keys(data.tankDamage).length > 0) {
                 console.log('Processing tank damage:', data.tankDamage);
 
+                let maxDamage = 0;
+
                 for (const [playerId, damage] of Object.entries(data.tankDamage)) {
                     const tank = game.tankManager.playerTanks.get(playerId);
                     if (tank && damage > 0) {
@@ -216,6 +218,9 @@ export function createMessageHandlers(game) {
                         tank.updateHpBar();
 
                         console.log(`Tank ${playerId} took ${damage} damage: ${oldHp} -> ${tank.hp} HP`);
+
+                        // Track max damage for screen shake intensity
+                        maxDamage = Math.max(maxDamage, damage);
 
                         // Show damage text with quarter precision
                         const damageDisplay = damage % 1 === 0 ? damage.toString() : damage.toFixed(2);
@@ -242,6 +247,15 @@ export function createMessageHandlers(game) {
                         }
                     }
                 }
+
+                // Apply screen shake based on damage dealt (5-20 damage scales nicely)
+                if (maxDamage > 0) {
+                    const shakeIntensity = Math.min(15, 5 + maxDamage * 0.5);
+                    game.effectsManager.applyScreenShake(shakeIntensity, 0.6, 4, 8);
+                }
+            } else {
+                // No tanks hit, just a small shake for the explosion itself
+                game.effectsManager.applyScreenShake(3, 0.4, 2, 2);
             }
 
             // Sync my tank position after terrain settles

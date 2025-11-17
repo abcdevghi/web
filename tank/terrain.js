@@ -429,6 +429,6 @@ export class TerrainManager {
             // Tank damage handled by tank manager
         }
 
-        this.blast(data.x, data.y, data.radius, null);
+        this.blast(data.x, data.y, Math.ceil(data.radius * 0.75), null);
     }
 }

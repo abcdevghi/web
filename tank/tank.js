@@ -544,7 +544,7 @@ export class BulletManager {
 
                 if (outOfBounds || terrainHit) {
                     if (terrainHit) {
-                        this.game.effectsManager.showExplosionEffect(ix, iy, 40, this.PALETTE.peach);
+                        this.game.effectsManager.showExplosionEffect(ix, iy, 70, this.PALETTE.peach);
 
                         if (isMyBullet) {
                             this.game.network.send({ type: 'explosion', x: ix, y: iy, radius: 40 });
@@ -560,7 +560,7 @@ export class BulletManager {
                 // Check tank hits
                 for (const [id, tank] of this.game.tankManager.playerTanks) {
                     if (tank.hp > 0 && this.bulletHitsTank(b, tank)) {
-                        this.game.effectsManager.showExplosionEffect(b.x, b.y, 12, this.PALETTE.yellow);
+                        this.game.effectsManager.showExplosionEffect(b.x, b.y, 20, this.PALETTE.yellow);
                         this.game.effectsManager.applyScreenShake(15, 0.12, 3);
 
                         if (isMyBullet) {
