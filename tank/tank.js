@@ -599,33 +599,40 @@ export class BulletManager {
 
     renderOptimizedTrails(globalBulletTrail) {
         globalBulletTrail.clear();
-
         for (let i = 0; i < this.bullets.length; i++) {
             const bullet = this.bullets[i];
             if (bullet.trail.length < 2) continue;
 
+            // Calculate bullet speed
+            const speed = Math.sqrt(bullet.vx * bullet.vx + bullet.vy * bullet.vy);
+
+            // Map speed to glow radius (5 to 10)
+            // Typical max speed at launch is around 15-20, min speed before hitting ground is around 1-3
+            const maxSpeed = 20; // Adjust based on your game's max bullet speed
+            const minSpeed = 1;
+            const speedRatio = Math.min(1, Math.max(0, (speed - minSpeed) / (maxSpeed - minSpeed)));
+            const glowRadius = 5 + (speedRatio * 5); // 5 when slow, 10 when fast
+
+            // Core bullet
             globalBulletTrail.beginFill(this.PALETTE.yellow, 0.9);
             globalBulletTrail.drawCircle(bullet.x, bullet.y, 3);
             globalBulletTrail.endFill();
 
+            // Velocity-based glow
             globalBulletTrail.beginFill(this.PALETTE.yellow, 0.3);
-            globalBulletTrail.drawCircle(bullet.x, bullet.y, 5);
+            globalBulletTrail.drawCircle(bullet.x, bullet.y, glowRadius);
             globalBulletTrail.endFill();
 
             const trail = bullet.trail;
             const maxSegments = 25;
             const sampleRate = Math.max(1, Math.floor(trail.length / maxSegments));
-
             for (let j = sampleRate; j < trail.length; j += sampleRate) {
                 const progress = j / (trail.length - 1);
-
                 const ageFactor = Math.pow(progress, 1.8);
                 const alpha = ageFactor * 0.7;
                 const width = 1.5 + ageFactor * 2.5;
-
                 const isMyBullet = bullet.shooter === this.game.myTank;
                 const trailColor = isMyBullet ? this.PALETTE.blue : this.PALETTE.yellow;
-
                 globalBulletTrail.lineStyle(width, trailColor, alpha);
                 globalBulletTrail.moveTo(trail[j - sampleRate].x, trail[j - sampleRate].y);
                 globalBulletTrail.lineTo(trail[j].x, trail[j].y);
@@ -789,13 +796,13 @@ export class EffectsManager {
 
         const flash = new PIXI.Graphics();
         flash.beginFill(this.PALETTE.yellow, 0.8);
-        flash.drawCircle(0, 0, 6);
+        flash.drawCircle(0, 0, 12);
         flash.endFill();
         flash.beginFill(this.PALETTE.peach, 0.6);
-        flash.drawCircle(0, 0, 4);
+        flash.drawCircle(0, 0, 8);
         flash.endFill();
         flash.beginFill(0xFFFFFF, 0.9);
-        flash.drawCircle(0, 0, 2);
+        flash.drawCircle(0, 0, 4);
         flash.endFill();
 
         flash.x = muzzleX;
@@ -812,7 +819,7 @@ export class EffectsManager {
 
         gsap.to(flash, {
             alpha: 0,
-            duration: 0.12,
+            duration: 0.3,
             ease: "power2.out",
             onComplete: () => this.world.removeChild(flash)
         });
