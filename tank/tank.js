@@ -628,6 +628,7 @@ export class BulletManager {
                 globalBulletTrail.lineTo(trail[j].x, trail[j].y);
             }
             // Core bullet
+            globalBulletTrail.lineStyle(width, this.PALETTE.yellow, alpha);
             globalBulletTrail.beginFill(this.PALETTE.yellow, 1);
             globalBulletTrail.drawCircle(bullet.x, bullet.y, 3);
             globalBulletTrail.endFill();
