@@ -607,12 +607,12 @@ export class BulletManager {
             const speed = Math.sqrt(bullet.vx * bullet.vx + bullet.vy * bullet.vy);
 
             // Map speed to glow radius (5 to 10)
-            const maxSpeed = 20;
+            // Typical max speed at launch is around 15-20, min speed before hitting ground is around 1-3
+            const maxSpeed = 20; // Adjust based on your game's max bullet speed
             const minSpeed = 1;
             const speedRatio = Math.min(1, Math.max(0, (speed - minSpeed) / (maxSpeed - minSpeed)));
             const glowRadius = 5 + (speedRatio * 5); // 5 when slow, 10 when fast
 
-            // DRAW ORDER: Trail lines first (back layer)
             const trail = bullet.trail;
             const maxSegments = 25;
             const sampleRate = Math.max(1, Math.floor(trail.length / maxSegments));
@@ -627,31 +627,14 @@ export class BulletManager {
                 globalBulletTrail.moveTo(trail[j - sampleRate].x, trail[j - sampleRate].y);
                 globalBulletTrail.lineTo(trail[j].x, trail[j].y);
             }
-
-            // Ghost trail circles (middle layer) - always yellow glow
-            if (trail.length >= 3) {
-                // Second ghost - 4 frames back
-                if (trail.length >= 5) {
-                    const ghost2Pos = trail[trail.length - 5];
-                    globalBulletTrail.beginFill(this.PALETTE.yellow, 0.1);
-                    globalBulletTrail.drawCircle(ghost2Pos.x, ghost2Pos.y, Math.max(1, glowRadius - 4));
-                    globalBulletTrail.endFill();
-                }
-
-                // First ghost - 2 frames back
-                const ghost1Pos = trail[trail.length - 3];
-                globalBulletTrail.beginFill(this.PALETTE.yellow, 0.2);
-                globalBulletTrail.drawCircle(ghost1Pos.x, ghost1Pos.y, Math.max(1, glowRadius - 2));
-                globalBulletTrail.endFill();
-            }
-
-            // Current bullet glow and core (top layer)
-            globalBulletTrail.beginFill(this.PALETTE.yellow, 0.3);
-            globalBulletTrail.drawCircle(bullet.x, bullet.y, glowRadius);
+            // Core bullet
+            globalBulletTrail.beginFill(this.PALETTE.yellow, 1);
+            globalBulletTrail.drawCircle(bullet.x, bullet.y, 3);
             globalBulletTrail.endFill();
 
-            globalBulletTrail.beginFill(this.PALETTE.yellow, 0.9);
-            globalBulletTrail.drawCircle(bullet.x, bullet.y, 3);
+            // Velocity-based glow
+            globalBulletTrail.beginFill(this.PALETTE.yellow, 0.3);
+            globalBulletTrail.drawCircle(bullet.x, bullet.y, glowRadius);
             globalBulletTrail.endFill();
         }
     }
