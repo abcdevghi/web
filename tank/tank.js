@@ -819,7 +819,7 @@ export class EffectsManager {
 
         gsap.to(flash, {
             alpha: 0,
-            duration: 0.3,
+            duration: 0.15,
             ease: "power2.out",
             onComplete: () => this.world.removeChild(flash)
         });
