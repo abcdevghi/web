@@ -630,7 +630,7 @@ export class BulletManager {
                 const alpha = ageFactor * 0.7;
                 const width = 1.5 + ageFactor * 2.5;
                 const isMyBullet = bullet.shooter === this.game.myTank;
-                const trailColor = isMyBullet ? this.PALETTE.blue : this.PALETTE.yellow;
+                const trailColor = this.PALETTE.yellow;
                 globalBulletTrail.lineStyle(width, trailColor, alpha);
                 globalBulletTrail.moveTo(trail[j - sampleRate].x, trail[j - sampleRate].y);
                 globalBulletTrail.lineTo(trail[j].x, trail[j].y);
