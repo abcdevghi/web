@@ -203,6 +203,61 @@ export function createMessageHandlers(game) {
         'explosion': (data) => {
             console.log('Explosion received:', data);
             game.terrainManager.handleExplosion(data);
+
+            // Handle tank damage from explosions
+            if (data.tankDamage && Object.keys(data.tankDamage).length > 0) {
+                console.log('Processing tank damage:', data.tankDamage);
+
+                for (const [playerId, damage] of Object.entries(data.tankDamage)) {
+                    const tank = game.tankManager.playerTanks.get(playerId);
+                    if (tank && damage > 0) {
+                        const oldHp = tank.hp;
+                        tank.hp = Math.max(0, tank.hp - damage);
+                        tank.updateHpBar();
+
+                        console.log(`Tank ${playerId} took ${damage} damage: ${oldHp} -> ${tank.hp} HP`);
+
+                        // Show damage text with quarter precision
+                        const damageDisplay = damage % 1 === 0 ? damage.toString() : damage.toFixed(2);
+                        game.effectsManager.showDamageText(tank.x, tank.y - 10, damageDisplay);
+
+                        // Check for elimination
+                        if (tank.hp <= 0 && !tank.eliminated) {
+                            tank.eliminated = true;
+                            game.addChatMessage(`❌ ${game.getPlayerUsername(playerId)} was eliminated!`);
+
+                            // Fade out eliminated tank
+                            gsap.to(tank, {
+                                alpha: 0.3,
+                                rotation: tank.rotation + Math.PI / 4,
+                                duration: 1,
+                                ease: "power2.out"
+                            });
+
+                            if (tank.nameText) {
+                                gsap.to(tank.nameText, { alpha: 0.3, duration: 1 });
+                            }
+
+                            game.updatePlayerCount();
+                        }
+                    }
+                }
+            }
+
+            // Sync my tank position after terrain settles
+            if (game.myTank && game.myTank.hp > 0) {
+                setTimeout(() => {
+                    // Force position recalculation after terrain changes
+                    const groundY = game.terrainManager.getTerrainHeight(game.myTank.x);
+                    game.myTank.y = groundY - game.myTank.height;
+                    game.tankManager.updateTankDisplay(game.myTank, game.scale);
+
+                    // Send updated position to server
+                    game.sendTankUpdate();
+
+                    console.log('Synced my tank position after explosion:', game.myTank.x, game.myTank.y);
+                }, 100); // Small delay to let terrain settle
+            }
         },
 
         'terrain-sync': (data) => {
