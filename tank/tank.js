@@ -890,8 +890,8 @@ export class TankFavicon {
         const tankX = (size - tankWidth) / 2;
         const tankY = size - tankHeight - 2;
 
-        const TRACK_HEIGHT = 6;
-        const TRACK_WIDTH = tankWidth + 6;
+        const TRACK_HEIGHT = 3;
+        const TRACK_WIDTH = tankWidth + 3;
         const TRACK_RADIUS = 2;
 
         const trackX = tankX - 3;
@@ -904,7 +904,7 @@ export class TankFavicon {
 
         ctx.fillStyle = crustColor;
         ctx.strokeStyle = tankColor;
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.roundRect(trackX, trackY, TRACK_WIDTH, TRACK_HEIGHT, TRACK_RADIUS);
         ctx.fill();
