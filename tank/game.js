@@ -368,7 +368,7 @@ export class Game {
         const angle = PIXI.DEG_TO_RAD * this.myTank.barrelAngleDeg;
         const speed = this.myTank.power * 0.5;
 
-        const barrelLength = 16;
+        const barrelLength = 8;
         const startX = this.myTank.x + Math.cos(angle) * barrelLength;
         const startY = this.myTank.y + Math.sin(angle) * barrelLength;
 
@@ -1066,7 +1066,7 @@ export class Game {
                 if (Array.isArray(data.allExplosions)) {
                     console.log('💥 Applying', data.allExplosions.length, 'explosions to terrain');
                     for (const blast of data.allExplosions) {
-                        this.terrainManager.blastTerrainOnly(blast.x, blast.y, Math.ceil(blast.radius * 0.5));
+                        this.terrainManager.blastTerrainOnly(blast.x, blast.y, Math.ceil(blast.radius * 0.25));
                     }
                 }
             } else {
