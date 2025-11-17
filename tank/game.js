@@ -645,7 +645,7 @@ export class Game {
                 const youPrefix = isYou ? '👤 ' : '';
                 const heart = isEliminated ? '✖ ' : `🛡 ${hp}/50`;
                 const turnIndicator = isCurrentTurn ? ' ▶' : '';
-                const displayName = `${youPrefix}${name} ${heart}${lockStatus}${turnIndicator}`;
+                const displayName = `${youPrefix}${name} ${heart}${turnIndicator}`;
 
                 return `<div class="${cssClass}" style="${styling}">${displayName}</div>`;
             }).join('');
