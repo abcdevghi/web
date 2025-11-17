@@ -504,65 +504,60 @@ export class BulletManager {
     updateBullets(persistentTrail, bulletTrail, globalBulletTrail) {
         for (let i = this.bullets.length - 1; i >= 0; i--) {
             const b = this.bullets[i];
-
             b.vy += GRAVITY;
             b.vx *= HORIZONTAL_DRAG;
-
             const steps = Math.ceil(Math.max(Math.abs(b.vx), Math.abs(b.vy)));
             let bulletHit = false;
             const isMyBullet = b.shooter === this.game.myTank;
 
+            // Initialize trail counter if it doesn't exist
+            if (b.trailCounter === undefined) b.trailCounter = 0;
+
             for (let s = 0; s < steps && !bulletHit; s++) {
                 b.x += b.vx / steps;
                 b.y += b.vy / steps;
-
                 this.updateBulletTrail(b);
 
                 if (isMyBullet) {
-                    persistentTrail.beginFill(this.PALETTE.blue, 0.05);
-                    persistentTrail.drawCircle(b.x, b.y, 1.2);
-                    persistentTrail.endFill();
+                    b.trailCounter++;
+                    // Only draw every 3rd point (adjust this number to control spacing)
+                    if (b.trailCounter % 3 === 0) {
+                        persistentTrail.beginFill(this.PALETTE.blue, 0.5);
+                        persistentTrail.drawCircle(b.x, b.y, 1.2);
+                        persistentTrail.endFill();
+                    }
                 }
 
                 const ix = Math.floor(b.x);
                 const iy = Math.floor(b.y);
-
                 const terrainHeight = this.terrainManager.getTerrainHeight(b.x);
                 const bounceThreshold = terrainHeight - 150;
-
                 const hittingLeftEdge = b.x <= 0 && b.y >= bounceThreshold;
                 const hittingRightEdge = b.x >= TERR_WIDTH - 1 && b.y >= bounceThreshold;
-
                 if (hittingLeftEdge || hittingRightEdge) {
                     b.vx *= -1;
                     b.x = Math.max(1, Math.min(TERR_WIDTH - 2, b.x));
                     continue;
                 }
-
                 const outOfBounds = b.x < 0 || b.x >= TERR_WIDTH;
                 const terrainHit = !outOfBounds && this.terrainManager.terrain[iy] && this.terrainManager.terrain[iy][ix];
-
                 if (outOfBounds || terrainHit) {
                     if (terrainHit) {
                         this.game.effectsManager.showExplosionEffect(ix, iy, 70, this.PALETTE.peach);
-
                         if (isMyBullet) {
                             this.game.network.send({ type: 'explosion', x: ix, y: iy, radius: 40 });
                         }
                     }
-
                     if (b.graphics) this.world.removeChild(b.graphics);
                     this.bullets.splice(i, 1);
                     bulletHit = true;
                     continue;
                 }
-
                 // Check tank hits
                 for (const [id, tank] of this.game.tankManager.playerTanks) {
                     if (tank.hp > 0 && this.bulletHitsTank(b, tank)) {
                         this.game.effectsManager.showExplosionEffect(b.x, b.y, 20, this.PALETTE.yellow);
                         this.game.effectsManager.applyScreenShake(15, 0.12, 3);
-
                         if (isMyBullet) {
                             this.game.network.send({
                                 type: 'direct-hit',
@@ -572,7 +567,6 @@ export class BulletManager {
                                 y: b.y
                             });
                         }
-
                         if (b.graphics) this.world.removeChild(b.graphics);
                         this.bullets.splice(i, 1);
                         bulletHit = true;
@@ -581,7 +575,6 @@ export class BulletManager {
                 }
             }
         }
-
         this.renderOptimizedTrails(globalBulletTrail);
     }
 
