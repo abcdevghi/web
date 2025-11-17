@@ -622,7 +622,7 @@ export class BulletManager {
             globalBulletTrail.drawCircle(bullet.x, bullet.y, glowRadius);
             globalBulletTrail.endFill();
             const trail = bullet.trail;
-            const maxSegments = 50;
+            const maxSegments = 100;
             const sampleRate = Math.max(1, Math.floor(trail.length / maxSegments));
             for (let j = sampleRate; j < trail.length; j += sampleRate) {
                 const progress = j / (trail.length - 1);
