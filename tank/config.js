@@ -1,7 +1,7 @@
 // config.js - All game constants and configuration
 
-export const TERR_WIDTH = 1600;
-export const TERR_HEIGHT = 1200;
+export const TERR_WIDTH = 1000;
+export const TERR_HEIGHT = 800;
 export const TANK_W = 16;
 export const TANK_H = 8;
 export const GRAVITY = 0.5;

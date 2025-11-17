@@ -1,4 +1,4 @@
-// terrain.js - Terrain generation, rendering, and manipulation
+// terrain.js - Improved terrain generation with smoother transitions
 
 import { TERR_WIDTH, TERR_HEIGHT, GRADIENT_STEPS, MAX_SLOPE } from './config.js';
 
@@ -52,6 +52,30 @@ export class TerrainManager {
         };
     }
 
+    // Smooth interpolation function (smoothstep)
+    smoothstep(edge0, edge1, x) {
+        const t = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0)));
+        return t * t * (3 - 2 * t);
+    }
+
+    // Apply smoothing filter to reduce jaggedness
+    smoothHeights(heights, passes = 2) {
+        const smoothed = [...heights];
+
+        for (let pass = 0; pass < passes; pass++) {
+            const temp = [...smoothed];
+            for (let i = 1; i < smoothed.length - 1; i++) {
+                // Weighted average with neighbors
+                temp[i] = smoothed[i] * 0.5 +
+                smoothed[i - 1] * 0.25 +
+                smoothed[i + 1] * 0.25;
+            }
+            smoothed.splice(0, smoothed.length, ...temp);
+        }
+
+        return smoothed;
+    }
+
     generate(seed) {
         console.log('🌍 Generating terrain with seed:', seed);
 
@@ -68,58 +92,117 @@ export class TerrainManager {
         const H = TERR_HEIGHT;
         const base = H * 0.75;
 
+        // Improved amplitude ranges for better variety
         const amps = {
-            plain: 0.3,
-            mountain: 1.4,
-            single_mountain: 0.4,
-            valley: 1.2,
-            cliff: 0.25
+            plain: 0.25,
+            mountain: 1.2,
+            single_mountain: 0.35,
+            valley: 1.0,
+            cliff: 0.2
         };
 
-        const amp = amps[type] * (0.8 + rng() * 0.4);
-        const peakH = 60 + rng() * 80;
-        const dipD = 60 + rng() * 80;
-        const cliffO = 40 + rng() * 60;
+        // Use RNG for all random values to ensure determinism
+        const ampVariation = rng();
+        const peakVariation = rng();
+        const dipVariation = rng();
+        const cliffVariation = rng();
 
+        const amp = amps[type] * (0.85 + ampVariation * 0.3);
+        const peakH = 70 + peakVariation * 100;
+        const dipD = 70 + dipVariation * 100;
+        const cliffO = 50 + cliffVariation * 80;
+
+        // Enhanced octave settings for more natural noise
         const octs = [
-            { f: 0.002, a: 120 },
-            { f: 0.007, a: 50 },
-            { f: 0.03, a: 15 }
+            { f: 0.0015, a: 130 },  // Large features
+            { f: 0.006, a: 45 },    // Medium features
+            { f: 0.025, a: 12 },    // Small details
+            { f: 0.08, a: 3 }       // Fine texture
         ];
 
         this.heights = [];
 
-        let s0 = 0.2 + rng() * 0.3;
-        let w0 = 0.2 + rng() * 0.4;
+        // Better randomized feature positions using seeded RNG
+        const s0Variation = rng();
+        const w0Variation = rng();
+        let s0 = 0.25 + s0Variation * 0.25;
+        let w0 = 0.25 + w0Variation * 0.35;
         let s1 = s0 + w0;
+
+        // Pre-generate random values for mountain peaks
+        const peak1Rand = rng();
+        const peak2Rand = rng();
 
         for (let x = 0; x <= W; x++) {
             let t = x / W;
+
+            // Multi-octave noise for natural variation
             let e = octs.reduce((sum, o) => sum + this.noise.simplex2(x * o.f, 0) * o.a, 0);
 
             let y = base - e * amp;
 
+            // Terrain type modifications with smoother transitions
             switch (type) {
                 case "single_mountain":
                     if (t > s0 && t < s1) {
-                        y -= Math.sin(((t - s0) / (s1 - s0)) * Math.PI) * peakH * 1.5;
+                        // Use smoothstep for natural mountain curve
+                        const mountainT = (t - s0) / (s1 - s0);
+                        const curve = Math.sin(mountainT * Math.PI);
+                        const smoothCurve = this.smoothstep(0, 1, curve);
+                        y -= smoothCurve * peakH * 1.4;
                     }
                     break;
+
                 case "valley":
-                    if (t > 0.3 && t < 0.7) {
-                        y += Math.sin(((t - 0.3) / 0.4) * Math.PI) * dipD;
+                    if (t > 0.25 && t < 0.75) {
+                        const valleyT = (t - 0.25) / 0.5;
+                        const curve = Math.sin(valleyT * Math.PI);
+                        const smoothCurve = this.smoothstep(0, 1, curve);
+                        y += smoothCurve * dipD;
                     }
                     break;
+
                 case "cliff":
-                    if (t < 0.5) y -= cliffO;
-                    y += this.noise.simplex2(x * octs[2].f, 0) * 6;
-                break;
+                    // Smoother cliff transition
+                    if (t < 0.5) {
+                        const cliffTransition = this.smoothstep(0.4, 0.5, t);
+                        y -= cliffO * (1 - cliffTransition);
+                    }
+                    // Add natural variation
+                    y += this.noise.simplex2(x * 0.02, 100) * 8;
+                    break;
+
+                case "mountain":
+                    // Add multiple peaks for mountain terrain (using pre-generated randoms)
+                    const peak1 = Math.sin(t * Math.PI * 1.5) * 40 * (peak1Rand * 0.5 + 0.5);
+                    const peak2 = Math.sin(t * Math.PI * 2.3 + 1) * 30 * (peak2Rand * 0.5 + 0.5);
+                    y -= peak1 + peak2;
+                    break;
             }
 
-            y = Math.max(4, Math.min(H - 2, y));
+            // Ensure terrain stays within bounds with smooth clamping
+            y = Math.max(10, Math.min(H - 10, y));
             this.heights.push(y);
         }
 
+        // Apply smoothing to reduce jaggedness
+        this.heights = this.smoothHeights(this.heights, 2);
+
+        // Additional edge smoothing to prevent harsh boundaries
+        const edgeSmooth = 15;
+        for (let i = 0; i < edgeSmooth; i++) {
+            const leftT = i / edgeSmooth;
+            const rightT = i / edgeSmooth;
+
+            this.heights[i] = this.heights[i] * this.smoothstep(0, 1, leftT) +
+            (H * 0.75) * (1 - this.smoothstep(0, 1, leftT));
+
+            const rightIdx = this.heights.length - 1 - i;
+            this.heights[rightIdx] = this.heights[rightIdx] * this.smoothstep(0, 1, rightT) +
+            (H * 0.75) * (1 - this.smoothstep(0, 1, rightT));
+        }
+
+        // Build terrain from heights
         this.terrain = Array.from({ length: H }, () => new Uint8Array(W));
 
         for (let i = 0; i < this.heights.length; i++) {
