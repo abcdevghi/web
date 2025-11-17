@@ -1066,7 +1066,7 @@ export class Game {
                 if (Array.isArray(data.allExplosions)) {
                     console.log('💥 Applying', data.allExplosions.length, 'explosions to terrain');
                     for (const blast of data.allExplosions) {
-                        this.terrainManager.blastTerrainOnly(blast.x, blast.y, Math.ceil(blast.radius * 0.75));
+                        this.terrainManager.blastTerrainOnly(blast.x, blast.y, Math.ceil(blast.radius * 0.5));
                     }
                 }
             } else {

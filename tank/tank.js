@@ -543,7 +543,7 @@ export class BulletManager {
                 const terrainHit = !outOfBounds && this.terrainManager.terrain[iy] && this.terrainManager.terrain[iy][ix];
                 if (outOfBounds || terrainHit) {
                     if (terrainHit) {
-                        this.game.effectsManager.showExplosionEffect(ix, iy, 70, this.PALETTE.peach);
+                        this.game.effectsManager.showExplosionEffect(ix, iy, 40, this.PALETTE.peach);
                         if (isMyBullet) {
                             this.game.network.send({ type: 'explosion', x: ix, y: iy, radius: 40 });
                         }
