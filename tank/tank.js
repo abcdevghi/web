@@ -612,7 +612,15 @@ export class BulletManager {
             const minSpeed = 1;
             const speedRatio = Math.min(1, Math.max(0, (speed - minSpeed) / (maxSpeed - minSpeed)));
             const glowRadius = 5 + (speedRatio * 5); // 5 when slow, 10 when fast
+                        // Core bullet
+            globalBulletTrail.beginFill(this.PALETTE.yellow, 1);
+            globalBulletTrail.drawCircle(bullet.x, bullet.y, 3);
+            globalBulletTrail.endFill();
 
+            // Velocity-based glow
+            globalBulletTrail.beginFill(this.PALETTE.yellow, 0.3);
+            globalBulletTrail.drawCircle(bullet.x, bullet.y, glowRadius);
+            globalBulletTrail.endFill();
             const trail = bullet.trail;
             const maxSegments = 25;
             const sampleRate = Math.max(1, Math.floor(trail.length / maxSegments));
@@ -627,16 +635,6 @@ export class BulletManager {
                 globalBulletTrail.moveTo(trail[j - sampleRate].x, trail[j - sampleRate].y);
                 globalBulletTrail.lineTo(trail[j].x, trail[j].y);
             }
-            // Core bullet
-            globalBulletTrail.lineStyle(width, this.PALETTE.yellow, alpha);
-            globalBulletTrail.beginFill(this.PALETTE.yellow, 1);
-            globalBulletTrail.drawCircle(bullet.x, bullet.y, 3);
-            globalBulletTrail.endFill();
-
-            // Velocity-based glow
-            globalBulletTrail.beginFill(this.PALETTE.yellow, 0.3);
-            globalBulletTrail.drawCircle(bullet.x, bullet.y, glowRadius);
-            globalBulletTrail.endFill();
         }
     }
 
