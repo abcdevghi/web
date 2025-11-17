@@ -521,8 +521,8 @@ export class BulletManager {
                 if (isMyBullet) {
                     b.trailCounter++;
                     // Only draw every 3rd point (adjust this number to control spacing)
-                    if (b.trailCounter % 3 === 0) {
-                        persistentTrail.beginFill(this.PALETTE.blue, 0.5);
+                    if (b.trailCounter % 2 === 0) {
+                        persistentTrail.beginFill(this.PALETTE.blue, 0.3);
                         persistentTrail.drawCircle(b.x, b.y, 1.2);
                         persistentTrail.endFill();
                     }
