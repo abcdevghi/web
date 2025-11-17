@@ -885,8 +885,8 @@ export class TankFavicon {
             ctx.fill();
         }
 
-        const tankWidth = 24;
-        const tankHeight = 12;
+        const tankWidth = 12;
+        const tankHeight = 6;
         const tankX = (size - tankWidth) / 2;
         const tankY = size - tankHeight - 2;
 
