@@ -890,8 +890,8 @@ export class TankFavicon {
         const tankX = (size - tankWidth) / 2;
         const tankY = size - tankHeight - 2;
 
-        const TRACK_HEIGHT = 3;
-        const TRACK_WIDTH = tankWidth + 3;
+        const TRACK_HEIGHT = 1;
+        const TRACK_WIDTH = tankWidth + 2;
         const TRACK_RADIUS = 2;
 
         const trackX = tankX - 3;
