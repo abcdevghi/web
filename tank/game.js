@@ -642,7 +642,7 @@ export class Game {
                     styling += ' font-weight: bold; background-color: rgba(255, 255, 255, 0.1); padding: 2px 4px; border-radius: 3px;';
                 }
 
-                const youPrefix = isYou ? '👤 ' : '';
+                const youPrefix = isYou ? '♟ ' : '';
                 const heart = isEliminated ? '✖ ' : `🛡 ${hp}/50`;
                 const turnIndicator = isCurrentTurn ? ' ▶' : '';
                 const displayName = `${youPrefix}${name} ${heart}${turnIndicator}`;
