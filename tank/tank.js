@@ -250,7 +250,9 @@ export class TankManager {
             tank.hp = Math.max(0, data.newHp || tank.hp - (data.damage || 20));
             tank.updateHpBar();
 
-            this.game.effectsManager.showDamageText(tank.x, tank.y - 10, data.damage || 20);
+            // Display damage with proper decimal formatting
+            const damageDisplay = data.damage % 1 === 0 ? data.damage : data.damage.toFixed(2);
+            this.game.effectsManager.showDamageText(tank.x, tank.y - 10, damageDisplay);
             this.game.effectsManager.applyScreenShake(12, 0.8, 2, 10);
 
             if (tank.hp === 0 && !tank.eliminated) {
@@ -710,7 +712,11 @@ export class EffectsManager {
     }
 
     showDamageText(x, y, damage) {
-        const damageText = new PIXI.Text(`-${damage}`, {
+        // Handle both number and string (already formatted) damage values
+        const damageStr = typeof damage === 'string' ? damage :
+        (damage % 1 === 0 ? damage.toString() : damage.toFixed(2));
+
+        const damageText = new PIXI.Text(`-${damageStr}`, {
             fontFamily: 'SpaceGrotesk',
             fontSize: 24,
             fill: this.PALETTE.red,
