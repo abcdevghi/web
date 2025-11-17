@@ -628,22 +628,20 @@ export class BulletManager {
                 globalBulletTrail.lineTo(trail[j].x, trail[j].y);
             }
 
-            // Ghost trail circles (middle layer)
+            // Ghost trail circles (middle layer) - always yellow glow
             if (trail.length >= 3) {
-                // Second ghost - 4 frames back (draw furthest ghost first)
+                // Second ghost - 4 frames back
                 if (trail.length >= 5) {
-                    const ghost2Index = Math.max(0, trail.length - 5);
-                    const ghost2 = trail[ghost2Index];
+                    const ghost2Pos = trail[trail.length - 5];
                     globalBulletTrail.beginFill(this.PALETTE.yellow, 0.1);
-                    globalBulletTrail.drawCircle(ghost2.x, ghost2.y, glowRadius - 4);
+                    globalBulletTrail.drawCircle(ghost2Pos.x, ghost2Pos.y, Math.max(1, glowRadius - 4));
                     globalBulletTrail.endFill();
                 }
 
                 // First ghost - 2 frames back
-                const ghost1Index = Math.max(0, trail.length - 3);
-                const ghost1 = trail[ghost1Index];
+                const ghost1Pos = trail[trail.length - 3];
                 globalBulletTrail.beginFill(this.PALETTE.yellow, 0.2);
-                globalBulletTrail.drawCircle(ghost1.x, ghost1.y, glowRadius - 2);
+                globalBulletTrail.drawCircle(ghost1Pos.x, ghost1Pos.y, Math.max(1, glowRadius - 2));
                 globalBulletTrail.endFill();
             }
 
