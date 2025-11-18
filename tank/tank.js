@@ -29,7 +29,7 @@ export class TankManager {
         .drawRoundedRect(-TANK_BODY_WIDTH / 2, 0, TANK_BODY_WIDTH, TANK_H, TANK_CORNER_RADIUS)
         .endFill();
         g.addChild(body);
-        const TRACK_WIDTH = TANK_BODY_WIDTH + 4;
+        const TRACK_WIDTH = TANK_BODY_WIDTH + 2;
         const TRACK_HEIGHT = 2;
         const TRACK_RADIUS = 3;
         const track = new PIXI.Graphics()
