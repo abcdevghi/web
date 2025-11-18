@@ -64,11 +64,11 @@ export class TankManager {
         g.updateHpBar();
         const barrel = new PIXI.Graphics()
         .beginFill(this.PALETTE.text)
-        .drawRect(0, 1, 8, 2)
+        .drawRect(0, 1, 12, 2)
         .drawCircle(0, 2, 1)
         .endFill();
         barrel.pivot.set(0, 2);
-        barrel.baseLength = 8;
+        barrel.baseLength = 12;
         barrel.recoilAmount = 0;
         barrel.isRecoiling = false;
 
