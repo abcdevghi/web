@@ -2,8 +2,8 @@
 
 export const TERR_WIDTH = 1000;
 export const TERR_HEIGHT = 800;
-export const TANK_W = 14;
-export const TANK_H = 6;
+export const TANK_W = 18;
+export const TANK_H = 8;
 export const GRAVITY = 0.5;
 export const MAX_SLOPE = 3;
 export const CELEBRATION_TIME = 10000;
