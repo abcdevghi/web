@@ -17,7 +17,7 @@ export class TankManager {
         g.hp = 50;
         g.playerId = playerId;
         g.eliminated = false;
-        const TANK_BODY_WIDTH = TANK_W - 8;
+        const TANK_BODY_WIDTH = TANK_W - 10;
         const TANK_CORNER_RADIUS = 4;
         g.flying = false;
         g.settling = false;
