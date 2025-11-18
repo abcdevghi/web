@@ -17,7 +17,7 @@ export class TankManager {
         g.hp = 50;
         g.playerId = playerId;
         g.eliminated = false;
-        const TANK_BODY_WIDTH = TANK_W;
+        const TANK_BODY_WIDTH = TANK_W - 4;
         const TANK_CORNER_RADIUS = 4;
         g.flying = false;
         g.settling = false;
@@ -29,7 +29,7 @@ export class TankManager {
         .drawRoundedRect(-TANK_BODY_WIDTH / 2, 0, TANK_BODY_WIDTH, TANK_H, TANK_CORNER_RADIUS)
         .endFill();
         g.addChild(body);
-        const TRACK_WIDTH = TANK_BODY_WIDTH;
+        const TRACK_WIDTH = TANK_W;
         const TRACK_HEIGHT = 3;
         const TRACK_RADIUS = 3;
         const track = new PIXI.Graphics()
