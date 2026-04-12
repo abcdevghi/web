@@ -84,7 +84,7 @@ main {
   justify-content: center;
   gap: 1rem;
   flex-wrap: wrap;
-  margin-top: 0rem;
+  margin-top: 0.5rem;
 }
 
 #project-nav {
