@@ -41,7 +41,7 @@ a {
 h1 {
   font-size: 36px;
   margin-top: 0;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -68,15 +68,15 @@ img {
 main {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 #about {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
 }
 
 #socials {
@@ -84,7 +84,7 @@ main {
   justify-content: center;
   gap: 1rem;
   flex-wrap: wrap;
-  margin-top: 0.5rem;
+  margin-top: 0rem;
 }
 
 #project-nav {
