@@ -53,10 +53,22 @@
   <link rel="stylesheet" href="./style.css" />
 </head>
 <style>
-#featured-videos iframe {
+#featured {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+#featured > iframe {
   width: 100%;
   aspect-ratio: 16/9;
-  border-radius: 12px;
+}
+
+#featured-music {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 </style>
 <body>
@@ -85,15 +97,16 @@
         <a href="/discord"><img src="/disc.png" alt="Discord" height="30" width="30" /></a>
       </div>
           <h3>featured</h3>
-          <div id="featured-videos">
+<div id="featured">
   <iframe src="https://www.youtube.com/embed/HiWTgs2aPp4"
     title="chase sequence" frameborder="0" allowfullscreen
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-    loading="lazy"></iframe>
+    loading="lazy" style="border-radius:12px"></iframe>
+  <div id="featured-music">
+    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/album/1IcEBaAr1eya74g9X1uN3f?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/album/5tGALJlcFVIVWscPeKa6l5?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  </div>
 </div>
-        <div id="socials"><iframe style="border-radius:12px" src="https://open.spotify.com/embed/album/1IcEBaAr1eya74g9X1uN3f?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/album/5tGALJlcFVIVWscPeKa6l5?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-        </div>
     </section>
 
 <section id="projects">
